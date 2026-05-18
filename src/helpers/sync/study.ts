@@ -34,6 +34,10 @@ function toCardRecordFields(record: CardRecord, userId: string) {
 }
 
 // ─── syncStudyData ────────────────────────────────────────────────────────────
+// Strategy: last-write-wins on last_reviewed timestamp.
+// Unreviewed records (lastReviewed === 0) are never pushed — they have no study data.
+// NOTE: session logs (attempt_logs) and progress resets are NOT handled here.
+// The web handles them via studyActions.ts; mobile uses lib/sync.ts syncSessionLogs/syncRecordResets.
 
 export async function syncStudyData(
   client: SupabaseClient,
@@ -41,12 +45,15 @@ export async function syncStudyData(
   userId: string,
 ): Promise<{ mergedFlatRecords: Record<string, CardRecord>; error: string | null; pushedCount: number; pulledCount: number }> {
 
+  // Flatten nested deckId → exerciseId structure into a single exerciseId map
   const localFlat: Record<string, CardRecord> = {}
   for (const exercises of Object.values(localCardRecords)) {
     for (const record of Object.values(exercises)) {
       localFlat[record.exerciseId] = record
     }
   }
+
+  // ── 1. Fetch server state ──────────────────────────────────────────────────
 
   const { data: serverRows, error: pullError } = await client
     .from('card_records').select('*').eq('user_id', userId)
@@ -55,6 +62,8 @@ export async function syncStudyData(
   const serverMap = new Map<string, CardRecordRow>(
     (serverRows as CardRecordRow[]).map((row) => [row.exercise_id, row])
   )
+
+  // ── 2. Merge local vs server — server wins when its last_reviewed is newer ──
 
   const mergedFlatRecords: Record<string, CardRecord> = {}
   const toInsert: ReturnType<typeof toCardRecordFields>[] = []
@@ -71,13 +80,15 @@ export async function syncStudyData(
       mergedFlatRecords[record.exerciseId] = record
       if (record.lastReviewed > 0) {
         const fields = toCardRecordFields(record, userId)
-        if (serverRow) toUpdate.push({ id: serverRow.id, fields })
-        else toInsert.push(fields)
+        if (!serverRow) toInsert.push(fields)
+        // Only update when local is strictly newer — equal timestamps mean no real change
+        else if (record.lastReviewed > serverTs) toUpdate.push({ id: serverRow.id, fields })
       }
     }
   }
 
-  // Records on server this device has never seen (e.g. studied on another device)
+  // ── 3. Pull server-only records (studied on another device) ────────────────
+
   for (const [exerciseId, serverRow] of serverMap) {
     if (!mergedFlatRecords[exerciseId]) {
       mergedFlatRecords[exerciseId] = fromCardRecordRow(serverRow)
@@ -85,7 +96,11 @@ export async function syncStudyData(
     }
   }
 
+  // ── 4. Push local winners ──────────────────────────────────────────────────
+
   if (toInsert.length > 0) {
+    // Verify exercise IDs exist — deckRecords can outlive deleted exercises, which would
+    // violate the card_records → exercises FK constraint.
     const { data: validExs } = await client
       .from('exercises').select('id').in('id', toInsert.map((r) => r.exercise_id))
     const validIds = new Set((validExs ?? []).map((e: { id: string }) => e.id))
@@ -96,12 +111,16 @@ export async function syncStudyData(
     }
   }
 
+  // BUG FIX: Supabase returns { error } per row rather than throwing — check each result
+  // so pushedCount only counts rows that actually landed on the server.
+  let successfulUpdates = 0
   if (toUpdate.length > 0) {
-    await Promise.all(
+    const results = await Promise.all(
       toUpdate.map(({ id, fields }) => client.from('card_records').update(fields).eq('id', id))
     )
+    successfulUpdates = results.filter((r) => !r.error).length
   }
 
-  const pushedCount = toInsert.length + toUpdate.length
+  const pushedCount = toInsert.length + successfulUpdates
   return { mergedFlatRecords, error: null, pushedCount, pulledCount }
 }
