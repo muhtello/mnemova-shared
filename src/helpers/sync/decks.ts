@@ -230,11 +230,20 @@ export async function syncDecks(
     if (!localById.has(server.id)) { mergedDecks.push(server); pulledCount++ }
   }
 
-  // BUG FIX: exercises removed from a local deck are absent from exUpserts but still alive on
-  // the server. Compute the set of server exercises that should be soft-deleted.
+  // Soft-delete server exercises that were explicitly removed from a local deck.
+  // CRITICAL GUARD: only treat absent exercises as deletions when the local deck
+  // had a non-empty exercises array — an empty array could mean "exercises not yet
+  // loaded into local state", not "user deleted everything". Without this guard,
+  // any deck pushed with exercises: [] would wipe all its server exercises.
   const pushedExerciseIds = new Set(exUpserts.map((r) => r.id))
   const orphanedExIds: string[] = []
   for (const upserted of deckUpserts) {
+    const localDeck = localById.get(upserted.id)
+    // Skip orphan detection when local exercises were empty — can't distinguish
+    // "user deleted all" from "exercises not yet loaded". Exercises are never
+    // orphaned by accident; at worst a genuinely-deleted exercise stays soft-live
+    // until the next push that includes exercises.
+    if (!localDeck?.exercises || localDeck.exercises.length === 0) continue
     const serverDeck = serverById.get(upserted.id)
     if (serverDeck) {
       for (const ex of serverDeck.exercises) {
