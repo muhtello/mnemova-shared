@@ -196,8 +196,10 @@ export async function syncDecks(
       if (localIsNewer) {
         deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
         exUpserts.push(...local.exercises.map((e) => toExerciseRow(local.id, e)))
-        settingUpserts.push(toStudySettingsRow(local.id, local.studySettings))
-        mergedDecks.push({ ...local, _localStatus: 'synced' })
+        // Guard: old persisted decks may lack studySettings (added later in schema)
+        const settings = local.studySettings ?? { ...DEFAULT_STUDY_SETTINGS }
+        settingUpserts.push(toStudySettingsRow(local.id, settings))
+        mergedDecks.push({ ...local, studySettings: settings, _localStatus: 'synced' })
         pushedCount++
       } else {
         // Server wins — local had no unsaved changes or server is strictly newer (conflict)
@@ -209,8 +211,10 @@ export async function syncDecks(
       if (local._localStatus !== 'synced') {
         deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
         exUpserts.push(...local.exercises.map((e) => toExerciseRow(local.id, e)))
-        settingUpserts.push(toStudySettingsRow(local.id, local.studySettings))
-        mergedDecks.push({ ...local, _localStatus: 'synced' })
+        // Guard: old persisted decks may lack studySettings (added later in schema)
+        const settings = local.studySettings ?? { ...DEFAULT_STUDY_SETTINGS }
+        settingUpserts.push(toStudySettingsRow(local.id, settings))
+        mergedDecks.push({ ...local, studySettings: settings, _localStatus: 'synced' })
         pushedCount++
       }
       // _localStatus === 'synced' with no server record means the deck was deleted remotely — drop it.
