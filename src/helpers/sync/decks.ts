@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { DEFAULT_STUDY_SETTINGS } from '../../types/settingType'
 import type { Deck } from '../../types/deckType'
-import type { Exercise } from '../../types/exerciseType'
+import type { Exercise, MatchPair } from '../../types/exerciseType'
 import type { StudySettings, RepeatMode } from '../../types/settingType'
 
 // ─── Row shapes ───────────────────────────────────────────────────────────────
@@ -67,6 +67,13 @@ function fromExerciseRow(row: ExerciseRow): Exercise {
       explanation: (props.explanation as string) ?? undefined,
     } as any
   }
+  if (row.type === 'match') {
+    return {
+      ...base, type: 'match',
+      pairs: (props.pairs as MatchPair[]) ?? [],
+      explanation: (props.explanation as string) ?? undefined,
+    } as any
+  }
   return {
     ...base, type: 'mcq',
     options: (props.options as string[]) ?? [],
@@ -87,6 +94,8 @@ function toExerciseRow(deckId: string, exercise: Exercise) {
     properties = { blanks: exercise.blanks, options: exercise.options, explanation: exercise.explanation ?? null }
   } else if (exercise.type === 'order-sentence') {
     properties = { words: exercise.words, explanation: exercise.explanation ?? null }
+  } else if (exercise.type === 'match') {
+    properties = { pairs: exercise.pairs, explanation: exercise.explanation ?? null }
   } else if (exercise.type === 'mcq') {
     properties = { options: exercise.options, answers: exercise.answers, explanation: exercise.explanation ?? null }
   }

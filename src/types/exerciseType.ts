@@ -2,10 +2,10 @@
 // Pure TypeScript — no framework dependencies.
 // Web-specific icon/UI constants live in cerevia-web/app/types/exerciseType.ts.
 
-export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pick' | 'order-sentence';
+export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pick' | 'order-sentence' | 'match';
 
 /** Fields of an exercise that can be filled from an editor text selection */
-export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence';
+export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence' | 'pairA' | 'pairB';
 
 /** Returns the fillable fields (with human labels) for a given exercise type */
 export function getDraftFields(type: ExerciseType): { field: FillableField; label: string }[] {
@@ -44,6 +44,13 @@ export function getDraftFields(type: ExerciseType): { field: FillableField; labe
                 { field: 'question', label: 'Question' },
                 { field: 'sentence', label: 'Sentence to Order' },
                 { field: 'answer', label: 'Correct Answer' },
+            ];
+        case 'match':
+            return [
+                { field: 'source', label: 'Source Text' },
+                { field: 'question', label: 'Question' },
+                { field: 'pairA', label: 'Add to Group A' },
+                { field: 'pairB', label: 'Add to Group B' },
             ];
     }
 }
@@ -95,12 +102,24 @@ export interface OrderSentenceExercise extends BaseExercise {
     explanation?: string;
 }
 
+export interface MatchPair {
+    a: string;
+    b: string[];
+}
+
+export interface MatchExercise extends BaseExercise {
+    type: 'match';
+    pairs: MatchPair[];
+    explanation?: string;
+}
+
 export type Exercise =
     | FlashcardExercise
     | FillInTheBlankExercise
     | McqExercise
     | WordPickExercise
-    | OrderSentenceExercise;
+    | OrderSentenceExercise
+    | MatchExercise;
 
 // ─── Exercise metadata (label/description — no icons) ────────────────────────
 
@@ -110,4 +129,5 @@ export const EXERCISE_META: Record<ExerciseType, { label: string; description: s
     'word-pick':         { label: 'Word Pick',      description: 'Select the missing word(s)' },
     mcq:                 { label: 'MCQ',            description: 'Multiple choice question' },
     'order-sentence':    { label: 'Order Sentence', description: 'Arrange shuffled words into the correct order' },
+    'match':             { label: 'Match',          description: 'Link each Group A item to its Group B match(es)' },
 };

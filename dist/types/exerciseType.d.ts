@@ -1,6 +1,6 @@
-export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pick' | 'order-sentence';
+export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pick' | 'order-sentence' | 'match';
 /** Fields of an exercise that can be filled from an editor text selection */
-export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence';
+export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence' | 'pairA' | 'pairB';
 /** Returns the fillable fields (with human labels) for a given exercise type */
 export declare function getDraftFields(type: ExerciseType): {
     field: FillableField;
@@ -45,7 +45,16 @@ export interface OrderSentenceExercise extends BaseExercise {
     words: string[];
     explanation?: string;
 }
-export type Exercise = FlashcardExercise | FillInTheBlankExercise | McqExercise | WordPickExercise | OrderSentenceExercise;
+export interface MatchPair {
+    a: string;
+    b: string[];
+}
+export interface MatchExercise extends BaseExercise {
+    type: 'match';
+    pairs: MatchPair[];
+    explanation?: string;
+}
+export type Exercise = FlashcardExercise | FillInTheBlankExercise | McqExercise | WordPickExercise | OrderSentenceExercise | MatchExercise;
 export declare const EXERCISE_META: Record<ExerciseType, {
     label: string;
     description: string;

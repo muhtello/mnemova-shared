@@ -43,6 +43,13 @@ function getDraftFields(type) {
                 { field: 'sentence', label: 'Sentence to Order' },
                 { field: 'answer', label: 'Correct Answer' },
             ];
+        case 'match':
+            return [
+                { field: 'source', label: 'Source Text' },
+                { field: 'question', label: 'Question' },
+                { field: 'pairA', label: 'Add to Group A' },
+                { field: 'pairB', label: 'Add to Group B' },
+            ];
     }
 }
 // ─── Exercise metadata (label/description — no icons) ────────────────────────
@@ -52,4 +59,5 @@ exports.EXERCISE_META = {
     'word-pick': { label: 'Word Pick', description: 'Select the missing word(s)' },
     mcq: { label: 'MCQ', description: 'Multiple choice question' },
     'order-sentence': { label: 'Order Sentence', description: 'Arrange shuffled words into the correct order' },
+    'match': { label: 'Match', description: 'Link each Group A item to its Group B match(es)' },
 };
