@@ -66,15 +66,14 @@ function toExerciseRow(deckId, exercise) {
     };
 }
 function fromStudySettingsRow(row) {
-    var _a;
+    var _a, _b, _c, _d;
     return {
         repeatSettings: { mode: row.repeat_mode, count: (_a = row.repeat_count) !== null && _a !== void 0 ? _a : undefined },
         hardDelayHours: row.hard_delay_hours, goodDays: row.good_days, easyDays: row.easy_days,
         intervalDayIncrement: row.interval_day_increment, maxCards: row.max_cards,
-        // TODO: maxHardRepeats, timerEnabled, timerSeconds not in DB schema — fall back to defaults
-        maxHardRepeats: settingType_1.DEFAULT_STUDY_SETTINGS.maxHardRepeats,
-        timerEnabled: settingType_1.DEFAULT_STUDY_SETTINGS.timerEnabled,
-        timerSeconds: settingType_1.DEFAULT_STUDY_SETTINGS.timerSeconds,
+        maxHardRepeats: (_b = row.max_hard_repeats) !== null && _b !== void 0 ? _b : settingType_1.DEFAULT_STUDY_SETTINGS.maxHardRepeats,
+        timerEnabled: (_c = row.timer_enabled) !== null && _c !== void 0 ? _c : settingType_1.DEFAULT_STUDY_SETTINGS.timerEnabled,
+        timerSeconds: (_d = row.timer_seconds) !== null && _d !== void 0 ? _d : settingType_1.DEFAULT_STUDY_SETTINGS.timerSeconds,
     };
 }
 function toStudySettingsRow(deckId, settings) {
@@ -83,6 +82,9 @@ function toStudySettingsRow(deckId, settings) {
         deck_id: deckId, repeat_mode: settings.repeatSettings.mode, repeat_count: (_a = settings.repeatSettings.count) !== null && _a !== void 0 ? _a : null,
         hard_delay_hours: settings.hardDelayHours, good_days: settings.goodDays, easy_days: settings.easyDays,
         interval_day_increment: settings.intervalDayIncrement, max_cards: settings.maxCards,
+        max_hard_repeats: settings.maxHardRepeats,
+        timer_enabled: settings.timerEnabled,
+        timer_seconds: settings.timerSeconds,
     };
 }
 function fromDeckRow(row, exercises, settings) {

@@ -22,7 +22,9 @@ interface StudySettingsRow {
   id: string; deck_id: string; repeat_mode: string; repeat_count: number | null
   hard_delay_hours: number; good_days: number; easy_days: number
   interval_day_increment: number; max_cards: number
-  // TODO: max_hard_repeats column missing — add to DB and include in toStudySettingsRow
+  max_hard_repeats: number | null
+  timer_enabled: boolean | null
+  timer_seconds: number | null
 }
 
 // ─── Converters ───────────────────────────────────────────────────────────────
@@ -103,10 +105,9 @@ function fromStudySettingsRow(row: StudySettingsRow): StudySettings {
     repeatSettings: { mode: row.repeat_mode as RepeatMode, count: row.repeat_count ?? undefined },
     hardDelayHours: row.hard_delay_hours, goodDays: row.good_days, easyDays: row.easy_days,
     intervalDayIncrement: row.interval_day_increment, maxCards: row.max_cards,
-    // TODO: maxHardRepeats, timerEnabled, timerSeconds not in DB schema — fall back to defaults
-    maxHardRepeats: DEFAULT_STUDY_SETTINGS.maxHardRepeats,
-    timerEnabled: DEFAULT_STUDY_SETTINGS.timerEnabled,
-    timerSeconds: DEFAULT_STUDY_SETTINGS.timerSeconds,
+    maxHardRepeats: row.max_hard_repeats ?? DEFAULT_STUDY_SETTINGS.maxHardRepeats,
+    timerEnabled: row.timer_enabled ?? DEFAULT_STUDY_SETTINGS.timerEnabled,
+    timerSeconds: row.timer_seconds ?? DEFAULT_STUDY_SETTINGS.timerSeconds,
   }
 }
 
@@ -115,6 +116,9 @@ function toStudySettingsRow(deckId: string, settings: StudySettings) {
     deck_id: deckId, repeat_mode: settings.repeatSettings.mode, repeat_count: settings.repeatSettings.count ?? null,
     hard_delay_hours: settings.hardDelayHours, good_days: settings.goodDays, easy_days: settings.easyDays,
     interval_day_increment: settings.intervalDayIncrement, max_cards: settings.maxCards,
+    max_hard_repeats: settings.maxHardRepeats,
+    timer_enabled: settings.timerEnabled,
+    timer_seconds: settings.timerSeconds,
   }
 }
 
