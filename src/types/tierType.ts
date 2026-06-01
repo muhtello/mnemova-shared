@@ -71,14 +71,4 @@ export const TIER_INFO: Record<Tier, TierInfo> = {
 };
 
 
-//---------------------payment info----------------
-
-interface TierPriceInfo {
-    proMonthly: number;
-    proYearly: number;
-}
-export const TierPricePro: TierPriceInfo = {
-    proMonthly: 4.99,
-    proYearly: 59.99,
-};
 

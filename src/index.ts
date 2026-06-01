@@ -12,3 +12,4 @@ export * from "./helpers/sync.helper";
 export * from "./helpers/stats.helper";
 export * from "./helpers/exerciseHelp";
 export * from "./helpers/deleteAccount";
+export * from "./helpers/tier.helper";
