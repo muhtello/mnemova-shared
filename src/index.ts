@@ -7,6 +7,7 @@ export * from "./types/tierType";
 export * from "./types/statsType";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+export * from "./helpers/auth.helper";
 export * from "./helpers/study.helper";
 export * from "./helpers/sync.helper";
 export * from "./helpers/stats.helper";
