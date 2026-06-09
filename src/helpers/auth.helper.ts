@@ -17,3 +17,20 @@ export async function checkEmailConfirmed(supabase: SupabaseClient): Promise<boo
   if (error || !user) return false
   return !!user.email_confirmed_at
 }
+
+/**
+ * Resends the signup confirmation email. Pass the platform-specific redirectTo
+ * so the link opens the correct destination (app deep link in mobile, HTTPS in web).
+ */
+export async function resendConfirmationEmail(
+  supabase: SupabaseClient,
+  email: string,
+  redirectTo: string,
+): Promise<{ error: string | null }> {
+  const { error } = await supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: { emailRedirectTo: redirectTo },
+  })
+  return { error: error?.message ?? null }
+}
