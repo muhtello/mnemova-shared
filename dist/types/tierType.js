@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TierPricePro = exports.TIER_INFO = exports.TIER_LIMITS = exports.RC_ENTITLEMENT_ID = void 0;
+exports.TIER_INFO = exports.TIER_LIMITS = exports.RC_ENTITLEMENT_ID = void 0;
 /** RevenueCat entitlement ID — must match what's configured in the RC dashboard */
 exports.RC_ENTITLEMENT_ID = 'pro';
 exports.TIER_LIMITS = {
@@ -39,8 +39,4 @@ exports.TIER_INFO = {
             `No Ads`
         ],
     },
-};
-exports.TierPricePro = {
-    proMonthly: 4.99,
-    proYearly: 59.99,
 };

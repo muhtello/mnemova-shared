@@ -29,9 +29,4 @@ type TierInfo = {
     features: string[];
 };
 export declare const TIER_INFO: Record<Tier, TierInfo>;
-interface TierPriceInfo {
-    proMonthly: number;
-    proYearly: number;
-}
-export declare const TierPricePro: TierPriceInfo;
 export {};
