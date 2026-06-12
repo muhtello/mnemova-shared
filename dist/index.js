@@ -6,7 +6,7 @@
 // `undefined` (e.g. validateEmail became undefined in production, silently breaking auth).
 // Explicit `export { x } from` emits a static, lazy getter per name — immune to init order.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserTier = exports.deleteAccount = exports.EXERCISE_HELP = exports.getDeckStats = exports.getExerciseStats = exports.buildSyncMessage = exports.updateProfile = exports.ensureProfile = exports.syncSessionHistory = exports.syncStudyData = exports.syncDecks = exports.selectNextPool = exports.getRepeatInsertPosition = exports.shouldRepeatHard = exports.shouldRepeatAgain = exports.applyRating = exports.pickFromPool = exports.buildExercisePool = exports.getInitialRecord = exports.resendConfirmationEmail = exports.checkEmailConfirmed = exports.validateEmail = exports.TIER_INFO = exports.TIER_LIMITS = exports.RC_ENTITLEMENT_ID = exports.createDeck = exports.DEFAULT_STUDY_SETTINGS = exports.EXERCISE_META = exports.getDraftFields = void 0;
+exports.getUserTier = exports.isEditSessionUsable = exports.generateShortCode = exports.EDIT_SESSION_TTL_MS = exports.deleteAccount = exports.EXERCISE_HELP = exports.getDeckStats = exports.getExerciseStats = exports.buildSyncMessage = exports.updateProfile = exports.ensureProfile = exports.syncSessionHistory = exports.syncStudyData = exports.syncDecks = exports.selectNextPool = exports.getRepeatInsertPosition = exports.shouldRepeatHard = exports.shouldRepeatAgain = exports.applyRating = exports.pickFromPool = exports.buildExercisePool = exports.getInitialRecord = exports.resendConfirmationEmail = exports.checkEmailConfirmed = exports.validateEmail = exports.TIER_INFO = exports.TIER_LIMITS = exports.RC_ENTITLEMENT_ID = exports.createDeck = exports.DEFAULT_STUDY_SETTINGS = exports.EXERCISE_META = exports.getDraftFields = void 0;
 var exerciseType_1 = require("./types/exerciseType");
 Object.defineProperty(exports, "getDraftFields", { enumerable: true, get: function () { return exerciseType_1.getDraftFields; } });
 Object.defineProperty(exports, "EXERCISE_META", { enumerable: true, get: function () { return exerciseType_1.EXERCISE_META; } });
@@ -46,5 +46,9 @@ var exerciseHelp_1 = require("./helpers/exerciseHelp");
 Object.defineProperty(exports, "EXERCISE_HELP", { enumerable: true, get: function () { return exerciseHelp_1.EXERCISE_HELP; } });
 var deleteAccount_1 = require("./helpers/deleteAccount");
 Object.defineProperty(exports, "deleteAccount", { enumerable: true, get: function () { return deleteAccount_1.deleteAccount; } });
+var editSession_helper_1 = require("./helpers/editSession.helper");
+Object.defineProperty(exports, "EDIT_SESSION_TTL_MS", { enumerable: true, get: function () { return editSession_helper_1.EDIT_SESSION_TTL_MS; } });
+Object.defineProperty(exports, "generateShortCode", { enumerable: true, get: function () { return editSession_helper_1.generateShortCode; } });
+Object.defineProperty(exports, "isEditSessionUsable", { enumerable: true, get: function () { return editSession_helper_1.isEditSessionUsable; } });
 var tier_helper_1 = require("./helpers/tier.helper");
 Object.defineProperty(exports, "getUserTier", { enumerable: true, get: function () { return tier_helper_1.getUserTier; } });

@@ -22,6 +22,12 @@ export type {
 export type { Deck } from "./types/deckType";
 export { createDeck } from "./types/deckType";
 
+export type {
+  EditSessionStatus, EditSessionSnapshot, EditSession,
+  OpenEditSessionInput, OpenEditSessionResult,
+  ClaimEditInput, ClaimEditResult, SaveEditInput,
+} from "./types/editSessionType";
+
 export type { Tier, SubscriptionStatus, UserTierRow } from "./types/tierType";
 export { RC_ENTITLEMENT_ID, TIER_LIMITS, TIER_INFO } from "./types/tierType";
 
@@ -48,6 +54,10 @@ export type { FieldHelp, ExerciseTypeHelp } from "./helpers/exerciseHelp";
 export { EXERCISE_HELP } from "./helpers/exerciseHelp";
 
 export { deleteAccount } from "./helpers/deleteAccount";
+
+export {
+  EDIT_SESSION_TTL_MS, generateShortCode, isEditSessionUsable,
+} from "./helpers/editSession.helper";
 
 export { getUserTier } from "./helpers/tier.helper";
 export type { UserTierResult } from "./helpers/tier.helper";
