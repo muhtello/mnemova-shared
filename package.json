@@ -8,14 +8,21 @@
     "test": "vitest run tests/study.helper.core.test.ts tests/study.helper.applyRating.test.ts tests/study.helper.gates.test.ts",
     "test:integration": "vitest run tests/sync.integration.test.ts tests/sync.rls.auth-isolation.test.ts tests/sync.rls.guest-isolation.test.ts tests/decks.rls.test.ts tests/card_records.rls.test.ts tests/exercises.rls.test.ts",
     "test:all": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "i18n:pull": "tolgee pull --path ./src/i18n/locales --format JSON_TOLGEE",
+    "i18n:push": "tolgee push --files-template ./src/i18n/locales/{languageTag}.json"
   },
   "peerDependencies": {
-    "@supabase/supabase-js": ">=2.0.0"
+    "@supabase/supabase-js": ">=2.0.0",
+    "i18next": ">=23.0.0",
+    "react-i18next": ">=14.0.0"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.105.4",
+    "@tolgee/cli": "^2.0.0",
     "@types/node": "^25.8.0",
+    "i18next": "^23.0.0",
+    "react-i18next": "^14.0.0",
     "typescript": "^5.0.0",
     "vitest": "^4.1.7"
   }

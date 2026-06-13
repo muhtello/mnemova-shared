@@ -1,0 +1,94 @@
+{
+  "common": {
+    "appName": "Mnemova",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "done": "Fertig",
+    "next": "Weiter",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "loading": "Wird geladen…",
+    "error": "Etwas ist schiefgelaufen",
+    "success": "Erfolgreich",
+    "tryAgain": "Erneut versuchen",
+    "retry": "Wiederholen",
+    "back": "Zurück"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen"
+  },
+  "nav": {
+    "decks": "Stapel",
+    "study": "Lernen",
+    "history": "Verlauf",
+    "settings": "Einstellungen",
+    "exercise": "Übung"
+  },
+  "study": {
+    "startSession": "Sitzung starten",
+    "showAnswer": "Antwort anzeigen",
+    "again": "Nochmal",
+    "hard": "Schwer",
+    "good": "Gut",
+    "easy": "Einfach",
+    "new": "Neu",
+    "due": "Fällig",
+    "learning": "Lernen",
+    "mastered": "Beherrscht",
+    "skipped": "Übersprungen",
+    "sessionComplete": "Sitzung abgeschlossen"
+  },
+  "stats": {
+    "difficulty": "Schwierigkeit",
+    "retention": "Behaltensrate",
+    "resetProgress": "Fortschritt zurücksetzen",
+    "streak": "Serie",
+    "secondsPerCard": "Sekunden pro Karte"
+  },
+  "exercise": {
+    "type": {
+      "flashcard": { "label": "Karteikarte", "description": "Frage & Antwort abrufen" },
+      "fillInTheBlank": { "label": "Lücke füllen", "description": "Fehlende(s) Wort(e) eingeben" },
+      "wordPick": { "label": "Wortauswahl", "description": "Fehlende(s) Wort(e) auswählen" },
+      "mcq": { "label": "Multiple Choice", "description": "Frage mit mehreren Optionen" },
+      "orderSentence": { "label": "Satz ordnen", "description": "Gemischte Wörter in die richtige Reihenfolge bringen" }
+    },
+    "field": {
+      "sourceText": "Quelltext",
+      "question": "Frage",
+      "answer": "Antwort",
+      "sentence": "Satz",
+      "missingWord": "Fehlendes Wort",
+      "correctWord": "Richtiges Wort",
+      "addDistractor": "Ablenker hinzufügen",
+      "addOption": "Option hinzufügen",
+      "correctAnswer": "Richtige Antwort",
+      "sentenceToOrder": "Zu ordnender Satz",
+      "explanation": "Erklärung"
+    }
+  },
+  "billing": {
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "free": { "label": "Kostenlos", "description": "Grundlegender Lernzugang" },
+    "pro": { "label": "Pro", "description": "Unbegrenztes Lernerlebnis" },
+    "feature": {
+      "qrSync": "QR-Sync",
+      "mobilePractice": "Mobiles Üben",
+      "decks3": "3 Stapel",
+      "exercises30Month": "30 Übungen / Monat",
+      "unlimitedDecks": "Unbegrenzte Stapel",
+      "unlimitedExercises": "Unbegrenzte Übungen",
+      "advancedModes": "Erweiterte Lernmodi",
+      "priorityFeatures": "Prioritäre Funktionen",
+      "noAds": "Keine Werbung"
+    }
+  }
+}

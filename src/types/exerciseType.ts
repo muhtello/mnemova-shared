@@ -7,43 +7,47 @@ export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pic
 /** Fields of an exercise that can be filled from an editor text selection */
 export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence';
 
-/** Returns the fillable fields (with human labels) for a given exercise type */
-export function getDraftFields(type: ExerciseType): { field: FillableField; label: string }[] {
+/**
+ * Returns the fillable fields for a given exercise type. `labelKey` is an i18n
+ * key (common namespace) — resolve it with t() at the call site so the field
+ * labels are translatable. Display text lives in i18n, not here.
+ */
+export function getDraftFields(type: ExerciseType): { field: FillableField; labelKey: string }[] {
     switch (type) {
         case 'flashcard':
             return [
-                { field: 'source', label: 'Source Text' },
-                { field: 'question', label: 'Question' },
-                { field: 'answer', label: 'Answer' },
+                { field: 'source', labelKey: 'common:exercise.field.sourceText' },
+                { field: 'question', labelKey: 'common:exercise.field.question' },
+                { field: 'answer', labelKey: 'common:exercise.field.answer' },
             ];
         case 'fill-in-the-blank':
             return [
-                { field: 'source', label: 'Source Text' },
-                { field: 'question', label: 'Sentence' },
-                { field: 'blank', label: 'Missing Word' },
-                { field: 'answer', label: 'Explanation' },
+                { field: 'source', labelKey: 'common:exercise.field.sourceText' },
+                { field: 'question', labelKey: 'common:exercise.field.sentence' },
+                { field: 'blank', labelKey: 'common:exercise.field.missingWord' },
+                { field: 'answer', labelKey: 'common:exercise.field.explanation' },
             ];
         case 'word-pick':
             return [
-                { field: 'source', label: 'Source Text' },
-                { field: 'question', label: 'Sentence' },
-                { field: 'blank', label: 'Correct Word' },
-                { field: 'option', label: 'Add Distractor' },
-                { field: 'answer', label: 'Explanation' },
+                { field: 'source', labelKey: 'common:exercise.field.sourceText' },
+                { field: 'question', labelKey: 'common:exercise.field.sentence' },
+                { field: 'blank', labelKey: 'common:exercise.field.correctWord' },
+                { field: 'option', labelKey: 'common:exercise.field.addDistractor' },
+                { field: 'answer', labelKey: 'common:exercise.field.explanation' },
             ];
         case 'mcq':
             return [
-                { field: 'source', label: 'Source Text' },
-                { field: 'question', label: 'Question' },
-                { field: 'option', label: 'Add Option' },
-                { field: 'answer', label: 'Correct Answer' },
+                { field: 'source', labelKey: 'common:exercise.field.sourceText' },
+                { field: 'question', labelKey: 'common:exercise.field.question' },
+                { field: 'option', labelKey: 'common:exercise.field.addOption' },
+                { field: 'answer', labelKey: 'common:exercise.field.correctAnswer' },
             ];
         case 'order-sentence':
             return [
-                { field: 'source', label: 'Source Text' },
-                { field: 'question', label: 'Question' },
-                { field: 'sentence', label: 'Sentence to Order' },
-                { field: 'answer', label: 'Correct Answer' },
+                { field: 'source', labelKey: 'common:exercise.field.sourceText' },
+                { field: 'question', labelKey: 'common:exercise.field.question' },
+                { field: 'sentence', labelKey: 'common:exercise.field.sentenceToOrder' },
+                { field: 'answer', labelKey: 'common:exercise.field.correctAnswer' },
             ];
     }
 }
@@ -102,12 +106,14 @@ export type Exercise =
     | WordPickExercise
     | OrderSentenceExercise;
 
-// ─── Exercise metadata (label/description — no icons) ────────────────────────
+// ─── Exercise metadata (i18n keys — no icons, no display text) ───────────────
+// labelKey/descriptionKey are common-namespace i18n keys; resolve with t() at
+// the call site so type labels are translatable.
 
-export const EXERCISE_META: Record<ExerciseType, { label: string; description: string }> = {
-    flashcard:           { label: 'Flashcard',      description: 'Question & answer recall' },
-    'fill-in-the-blank': { label: 'Fill Blank',     description: 'Type the missing word(s)' },
-    'word-pick':         { label: 'Word Pick',      description: 'Select the missing word(s)' },
-    mcq:                 { label: 'MCQ',            description: 'Multiple choice question' },
-    'order-sentence':    { label: 'Order Sentence', description: 'Arrange shuffled words into the correct order' },
+export const EXERCISE_META: Record<ExerciseType, { labelKey: string; descriptionKey: string }> = {
+    flashcard:           { labelKey: 'common:exercise.type.flashcard.label',      descriptionKey: 'common:exercise.type.flashcard.description' },
+    'fill-in-the-blank': { labelKey: 'common:exercise.type.fillInTheBlank.label', descriptionKey: 'common:exercise.type.fillInTheBlank.description' },
+    'word-pick':         { labelKey: 'common:exercise.type.wordPick.label',       descriptionKey: 'common:exercise.type.wordPick.description' },
+    mcq:                 { labelKey: 'common:exercise.type.mcq.label',            descriptionKey: 'common:exercise.type.mcq.description' },
+    'order-sentence':    { labelKey: 'common:exercise.type.orderSentence.label',  descriptionKey: 'common:exercise.type.orderSentence.description' },
 };

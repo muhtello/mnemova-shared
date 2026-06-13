@@ -34,38 +34,41 @@ export const TIER_LIMITS = {
     },
 } as const;
 
+// label/description/feature text is now i18n. *Key fields hold common-namespace
+// keys — resolve with t() at the call site (e.g. t(info.labelKey),
+// info.featureKeys.map(t)). Numeric limits stay here as data.
 type TierInfo = {
-    label: string;
-    description: string;
+    labelKey: string;
+    descriptionKey: string;
     maxDecks: number;
     monthlyExercises: number;
-    features: string[];
+    featureKeys: string[];
 };
 
 export const TIER_INFO: Record<Tier, TierInfo> = {
     free: {
-        label: 'Free',
-        description: 'Basic learning access',
+        labelKey: 'common:billing.free.label',
+        descriptionKey: 'common:billing.free.description',
         maxDecks: TIER_LIMITS.free.maxDecks,
         monthlyExercises: TIER_LIMITS.free.monthlyExercises,
-        features: [
-            'QR Sync',
-            'Mobile Practice',
-            '3 Decks',
-            '30 Exercises / Month',
+        featureKeys: [
+            'common:billing.feature.qrSync',
+            'common:billing.feature.mobilePractice',
+            'common:billing.feature.decks3',
+            'common:billing.feature.exercises30Month',
         ],
     },
     pro: {
-        label: 'Pro',
-        description: 'Unlimited learning experience',
+        labelKey: 'common:billing.pro.label',
+        descriptionKey: 'common:billing.pro.description',
         maxDecks: TIER_LIMITS.pro.maxDecks,
         monthlyExercises: TIER_LIMITS.pro.monthlyExercises,
-        features: [
-            'Unlimited Decks',
-            'Unlimited Exercises',
-            'Advanced Learning Modes',
-            'Priority Features',
-            `No Ads`
+        featureKeys: [
+            'common:billing.feature.unlimitedDecks',
+            'common:billing.feature.unlimitedExercises',
+            'common:billing.feature.advancedModes',
+            'common:billing.feature.priorityFeatures',
+            'common:billing.feature.noAds',
         ],
     },
 };

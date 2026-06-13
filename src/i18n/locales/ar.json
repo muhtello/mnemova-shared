@@ -1,0 +1,94 @@
+{
+  "common": {
+    "appName": "Mnemova",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "done": "تم",
+    "next": "التالي",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "loading": "جارٍ التحميل…",
+    "error": "حدث خطأ ما",
+    "success": "تم بنجاح",
+    "tryAgain": "إعادة المحاولة",
+    "retry": "إعادة",
+    "back": "رجوع"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "signOut": "تسجيل الخروج",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور"
+  },
+  "nav": {
+    "decks": "المجموعات",
+    "study": "الدراسة",
+    "history": "السجل",
+    "settings": "الإعدادات",
+    "exercise": "تمرين"
+  },
+  "study": {
+    "startSession": "بدء الجلسة",
+    "showAnswer": "إظهار الإجابة",
+    "again": "مجددًا",
+    "hard": "صعب",
+    "good": "جيد",
+    "easy": "سهل",
+    "new": "جديد",
+    "due": "مستحق",
+    "learning": "قيد التعلّم",
+    "mastered": "متقَن",
+    "skipped": "متخطّى",
+    "sessionComplete": "اكتملت الجلسة"
+  },
+  "stats": {
+    "difficulty": "الصعوبة",
+    "retention": "الاحتفاظ",
+    "resetProgress": "إعادة ضبط التقدّم",
+    "streak": "التتابع",
+    "secondsPerCard": "ثوانٍ لكل بطاقة"
+  },
+  "exercise": {
+    "type": {
+      "flashcard": { "label": "بطاقة", "description": "استرجاع السؤال والإجابة" },
+      "fillInTheBlank": { "label": "ملء الفراغ", "description": "اكتب الكلمة (الكلمات) الناقصة" },
+      "wordPick": { "label": "اختيار الكلمة", "description": "اختر الكلمة (الكلمات) الناقصة" },
+      "mcq": { "label": "اختيار من متعدد", "description": "سؤال متعدد الخيارات" },
+      "orderSentence": { "label": "ترتيب الجملة", "description": "رتّب الكلمات المبعثرة بالترتيب الصحيح" }
+    },
+    "field": {
+      "sourceText": "النص المصدر",
+      "question": "السؤال",
+      "answer": "الإجابة",
+      "sentence": "الجملة",
+      "missingWord": "الكلمة الناقصة",
+      "correctWord": "الكلمة الصحيحة",
+      "addDistractor": "إضافة مشتّت",
+      "addOption": "إضافة خيار",
+      "correctAnswer": "الإجابة الصحيحة",
+      "sentenceToOrder": "جملة للترتيب",
+      "explanation": "الشرح"
+    }
+  },
+  "billing": {
+    "monthly": "شهري",
+    "yearly": "سنوي",
+    "free": { "label": "مجاني", "description": "وصول أساسي للتعلّم" },
+    "pro": { "label": "احترافي", "description": "تجربة تعلّم بلا حدود" },
+    "feature": {
+      "qrSync": "مزامنة QR",
+      "mobilePractice": "تمرين على الجوال",
+      "decks3": "٣ مجموعات",
+      "exercises30Month": "٣٠ تمرينًا / شهر",
+      "unlimitedDecks": "مجموعات غير محدودة",
+      "unlimitedExercises": "تمارين غير محدودة",
+      "advancedModes": "أنماط تعلّم متقدمة",
+      "priorityFeatures": "ميزات ذات أولوية",
+      "noAds": "بدون إعلانات"
+    }
+  }
+}

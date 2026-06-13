@@ -1,0 +1,16 @@
+{
+  "$schema": "https://tolgee.io/cli-schema.json",
+  "apiUrl": "https://app.tolgee.io",
+  "projectId": 0,
+  "format": "JSON_TOLGEE",
+  "push": {
+    "files": [
+      { "path": "./src/i18n/locales/en.json", "language": "en" },
+      { "path": "./src/i18n/locales/ar.json", "language": "ar" },
+      { "path": "./src/i18n/locales/de.json", "language": "de" }
+    ]
+  },
+  "pull": {
+    "path": "./src/i18n/locales"
+  }
+}
