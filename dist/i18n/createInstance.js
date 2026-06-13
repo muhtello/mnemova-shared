@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createI18n = createI18n;
 const i18next_1 = __importDefault(require("i18next"));
-const react_i18next_1 = require("react-i18next");
 const resources_1 = require("./resources");
 const config_1 = require("./config");
 // Shallow-merges app namespaces into the shared bundles per locale. Each
@@ -28,8 +27,14 @@ function createI18n(options = {}) {
     const merged = mergeResources(resources_1.resources, extra);
     const namespaces = Array.from(new Set(Object.values(merged).flatMap((bundle) => Object.keys(bundle))));
     const instance = i18next_1.default.createInstance();
-    if (withReact)
-        instance.use(react_i18next_1.initReactI18next);
+    // Lazily pull in react-i18next ONLY when a React binding is requested. Its
+    // module evaluation calls React.createContext, which throws when the shared
+    // barrel is imported from a server context (e.g. Next.js "use server" files
+    // that import unrelated helpers). Deferring keeps the barrel server-safe.
+    if (withReact) {
+        const { initReactI18next } = require("react-i18next");
+        instance.use(initReactI18next);
+    }
     // Synchronous: resources are bundled (no async backend), so the instance is
     // ready the moment this returns.
     instance.init({

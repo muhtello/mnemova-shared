@@ -1,5 +1,4 @@
 import i18next, { type i18n, type Resource } from "i18next";
-import { initReactI18next } from "react-i18next";
 import { resources as common, COMMON_NS } from "./resources";
 import { DEFAULT_LOCALE, FALLBACK_LOCALE, type Locale } from "./config";
 
@@ -46,7 +45,14 @@ export function createI18n(options: CreateI18nOptions = {}): i18n {
   );
 
   const instance = i18next.createInstance();
-  if (withReact) instance.use(initReactI18next);
+  // Lazily pull in react-i18next ONLY when a React binding is requested. Its
+  // module evaluation calls React.createContext, which throws when the shared
+  // barrel is imported from a server context (e.g. Next.js "use server" files
+  // that import unrelated helpers). Deferring keeps the barrel server-safe.
+  if (withReact) {
+    const { initReactI18next } = require("react-i18next") as typeof import("react-i18next");
+    instance.use(initReactI18next);
+  }
   // Synchronous: resources are bundled (no async backend), so the instance is
   // ready the moment this returns.
   instance.init({
