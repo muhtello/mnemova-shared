@@ -15,28 +15,28 @@ exports.TIER_LIMITS = {
 };
 exports.TIER_INFO = {
     free: {
-        label: 'Free',
-        description: 'Basic learning access',
+        labelKey: 'common:billing.free.label',
+        descriptionKey: 'common:billing.free.description',
         maxDecks: exports.TIER_LIMITS.free.maxDecks,
         monthlyExercises: exports.TIER_LIMITS.free.monthlyExercises,
-        features: [
-            'QR Sync',
-            'Mobile Practice',
-            '3 Decks',
-            '30 Exercises / Month',
+        featureKeys: [
+            'common:billing.feature.qrSync',
+            'common:billing.feature.mobilePractice',
+            'common:billing.feature.decks3',
+            'common:billing.feature.exercises30Month',
         ],
     },
     pro: {
-        label: 'Pro',
-        description: 'Unlimited learning experience',
+        labelKey: 'common:billing.pro.label',
+        descriptionKey: 'common:billing.pro.description',
         maxDecks: exports.TIER_LIMITS.pro.maxDecks,
         monthlyExercises: exports.TIER_LIMITS.pro.monthlyExercises,
-        features: [
-            'Unlimited Decks',
-            'Unlimited Exercises',
-            'Advanced Learning Modes',
-            'Priority Features',
-            `No Ads`
+        featureKeys: [
+            'common:billing.feature.unlimitedDecks',
+            'common:billing.feature.unlimitedExercises',
+            'common:billing.feature.advancedModes',
+            'common:billing.feature.priorityFeatures',
+            'common:billing.feature.noAds',
         ],
     },
 };

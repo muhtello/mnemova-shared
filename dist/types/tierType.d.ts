@@ -22,11 +22,11 @@ export declare const TIER_LIMITS: {
     };
 };
 type TierInfo = {
-    label: string;
-    description: string;
+    labelKey: string;
+    descriptionKey: string;
     maxDecks: number;
     monthlyExercises: number;
-    features: string[];
+    featureKeys: string[];
 };
 export declare const TIER_INFO: Record<Tier, TierInfo>;
 export {};

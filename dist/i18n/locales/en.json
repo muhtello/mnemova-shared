@@ -1,0 +1,94 @@
+{
+    "common": {
+        "appName": "Mnemova",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "done": "Done",
+        "next": "Next",
+        "close": "Close",
+        "confirm": "Confirm",
+        "loading": "Loading…",
+        "error": "Something went wrong",
+        "success": "Success",
+        "tryAgain": "Try again",
+        "retry": "Retry",
+        "back": "Back"
+    },
+    "auth": {
+        "signIn": "Sign in",
+        "signUp": "Sign up",
+        "signOut": "Sign out",
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm password"
+    },
+    "nav": {
+        "decks": "Decks",
+        "study": "Study",
+        "history": "History",
+        "settings": "Settings",
+        "exercise": "Exercise"
+    },
+    "study": {
+        "startSession": "Start session",
+        "showAnswer": "Show answer",
+        "again": "Again",
+        "hard": "Hard",
+        "good": "Good",
+        "easy": "Easy",
+        "new": "New",
+        "due": "Due",
+        "learning": "Learning",
+        "mastered": "Mastered",
+        "skipped": "Skipped",
+        "sessionComplete": "Session complete"
+    },
+    "stats": {
+        "difficulty": "Difficulty",
+        "retention": "Retention",
+        "resetProgress": "Reset progress",
+        "streak": "Streak",
+        "secondsPerCard": "Seconds per card"
+    },
+    "exercise": {
+        "type": {
+            "flashcard": { "label": "Flashcard", "description": "Question & answer recall" },
+            "fillInTheBlank": { "label": "Fill Blank", "description": "Type the missing word(s)" },
+            "wordPick": { "label": "Word Pick", "description": "Select the missing word(s)" },
+            "mcq": { "label": "MCQ", "description": "Multiple choice question" },
+            "orderSentence": { "label": "Order Sentence", "description": "Arrange shuffled words into the correct order" }
+        },
+        "field": {
+            "sourceText": "Source Text",
+            "question": "Question",
+            "answer": "Answer",
+            "sentence": "Sentence",
+            "missingWord": "Missing Word",
+            "correctWord": "Correct Word",
+            "addDistractor": "Add Distractor",
+            "addOption": "Add Option",
+            "correctAnswer": "Correct Answer",
+            "sentenceToOrder": "Sentence to Order",
+            "explanation": "Explanation"
+        }
+    },
+    "billing": {
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "free": { "label": "Free", "description": "Basic learning access" },
+        "pro": { "label": "Pro", "description": "Unlimited learning experience" },
+        "feature": {
+            "qrSync": "QR Sync",
+            "mobilePractice": "Mobile Practice",
+            "decks3": "3 Decks",
+            "exercises30Month": "30 Exercises / Month",
+            "unlimitedDecks": "Unlimited Decks",
+            "unlimitedExercises": "Unlimited Exercises",
+            "advancedModes": "Advanced Learning Modes",
+            "priorityFeatures": "Priority Features",
+            "noAds": "No Ads"
+        }
+    }
+}

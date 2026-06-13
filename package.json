@@ -21,6 +21,7 @@
     "@supabase/supabase-js": "^2.105.4",
     "@tolgee/cli": "^2.0.0",
     "@types/node": "^25.8.0",
+    "@types/react": "^19.0.0",
     "i18next": "^23.0.0",
     "react-i18next": "^14.0.0",
     "typescript": "^5.0.0",

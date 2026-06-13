@@ -1,10 +1,14 @@
 export type ExerciseType = 'flashcard' | 'mcq' | 'fill-in-the-blank' | 'word-pick' | 'order-sentence';
 /** Fields of an exercise that can be filled from an editor text selection */
 export type FillableField = 'source' | 'question' | 'answer' | 'blank' | 'option' | 'sentence';
-/** Returns the fillable fields (with human labels) for a given exercise type */
+/**
+ * Returns the fillable fields for a given exercise type. `labelKey` is an i18n
+ * key (common namespace) — resolve it with t() at the call site so the field
+ * labels are translatable. Display text lives in i18n, not here.
+ */
 export declare function getDraftFields(type: ExerciseType): {
     field: FillableField;
-    label: string;
+    labelKey: string;
 }[];
 export interface BaseExercise {
     id: string;
@@ -47,6 +51,6 @@ export interface OrderSentenceExercise extends BaseExercise {
 }
 export type Exercise = FlashcardExercise | FillInTheBlankExercise | McqExercise | WordPickExercise | OrderSentenceExercise;
 export declare const EXERCISE_META: Record<ExerciseType, {
-    label: string;
-    description: string;
+    labelKey: string;
+    descriptionKey: string;
 }>;
