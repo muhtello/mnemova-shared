@@ -14,12 +14,16 @@ function fromExerciseRow(row) {
         createdAt: new Date(row.created_at).getTime(),
     };
     if (row.type === 'flashcard') {
-        return Object.assign(Object.assign({}, base), { type: 'flashcard', answer: (_d = props.answer) !== null && _d !== void 0 ? _d : '' });
+        return { ...base, type: 'flashcard', answer: (_d = props.answer) !== null && _d !== void 0 ? _d : '' };
     }
     if (row.type === 'fill-in-the-blank') {
         const storedBlanks = props.blanks;
         const storedBlank = (_e = props.blank) !== null && _e !== void 0 ? _e : '';
-        return Object.assign(Object.assign({}, base), { type: 'fill-in-the-blank', blank: storedBlank, blanks: storedBlanks && storedBlanks.length > 0 ? storedBlanks : undefined, explanation: (_f = props.explanation) !== null && _f !== void 0 ? _f : undefined });
+        return {
+            ...base, type: 'fill-in-the-blank', blank: storedBlank,
+            blanks: storedBlanks && storedBlanks.length > 0 ? storedBlanks : undefined,
+            explanation: (_f = props.explanation) !== null && _f !== void 0 ? _f : undefined,
+        };
     }
     if (row.type === 'word-pick') {
         const options = (_g = props.options) !== null && _g !== void 0 ? _g : [];
@@ -31,12 +35,21 @@ function fromExerciseRow(row) {
             const blankCount = Math.max(((_j = row.question.match(/_{2,}/g)) !== null && _j !== void 0 ? _j : []).length, 1);
             blanks = options.slice(0, blankCount);
         }
-        return Object.assign(Object.assign({}, base), { type: 'word-pick', blanks, options, explanation: (_k = props.explanation) !== null && _k !== void 0 ? _k : undefined });
+        return { ...base, type: 'word-pick', blanks, options, explanation: (_k = props.explanation) !== null && _k !== void 0 ? _k : undefined };
     }
     if (row.type === 'order-sentence') {
-        return Object.assign(Object.assign({}, base), { type: 'order-sentence', words: (_l = props.words) !== null && _l !== void 0 ? _l : [], explanation: (_m = props.explanation) !== null && _m !== void 0 ? _m : undefined });
+        return {
+            ...base, type: 'order-sentence',
+            words: (_l = props.words) !== null && _l !== void 0 ? _l : [],
+            explanation: (_m = props.explanation) !== null && _m !== void 0 ? _m : undefined,
+        };
     }
-    return Object.assign(Object.assign({}, base), { type: 'mcq', options: (_o = props.options) !== null && _o !== void 0 ? _o : [], answers: (_p = props.answers) !== null && _p !== void 0 ? _p : [], explanation: (_q = props.explanation) !== null && _q !== void 0 ? _q : undefined });
+    return {
+        ...base, type: 'mcq',
+        options: (_o = props.options) !== null && _o !== void 0 ? _o : [],
+        answers: (_p = props.answers) !== null && _p !== void 0 ? _p : [],
+        explanation: (_q = props.explanation) !== null && _q !== void 0 ? _q : undefined,
+    };
 }
 function toExerciseRow(deckId, exercise) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
@@ -62,7 +75,7 @@ function toExerciseRow(deckId, exercise) {
         id: exercise.id, deck_id: deckId, type: exercise.type, question: exercise.question,
         properties, source_text: (_f = exercise.sourceText) !== null && _f !== void 0 ? _f : null, source_range: (_g = exercise.sourceRange) !== null && _g !== void 0 ? _g : null,
         highlight_color: (_h = exercise.highlightColor) !== null && _h !== void 0 ? _h : null,
-        created_at: new Date(exercise.createdAt).toISOString(), updated_at: new Date().toISOString(), deleted_at: null,
+        created_at: msToISO(exercise.createdAt), updated_at: new Date().toISOString(), deleted_at: null,
     };
 }
 function fromStudySettingsRow(row) {
@@ -105,6 +118,16 @@ function toTime(date) {
         return 0;
     return typeof date === 'string' ? new Date(date).getTime() : date.getTime();
 }
+// Safely convert a millisecond timestamp to ISO. Legacy exercises persisted before
+// `createdAt` existed can be undefined at runtime (the type says number, but old
+// local data predates it); a corrupt value can be NaN. Either would make
+// new Date(x).toISOString() throw RangeError and abort the whole sync — so fall
+// back to "now" instead.
+function msToISO(ms) {
+    if (typeof ms !== 'number' || !Number.isFinite(ms))
+        return new Date().toISOString();
+    return new Date(ms).toISOString();
+}
 function isValidUUID(id) {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 }
@@ -116,7 +139,7 @@ function isValidUUID(id) {
 // devices don't receive ghost exercises.
 async function syncDecks(client, localDecks, pendingDeletes, userId) {
     // ── Phase 1: Fetch server state ─────────────────────────────────────────────
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
     const { data: deckRows, error: deckError } = await client
         .from('decks').select('*').eq('owner_id', userId).is('deleted_at', null);
     if (deckError)
@@ -143,7 +166,7 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
     });
     const settingsByDeck = new Map();
     settingRows.forEach((row) => settingsByDeck.set(row.deck_id, fromStudySettingsRow(row)));
-    const serverDecks = deckRows.map((row) => { var _a, _b; return fromDeckRow(row, (_a = exercisesByDeck.get(row.id)) !== null && _a !== void 0 ? _a : [], (_b = settingsByDeck.get(row.id)) !== null && _b !== void 0 ? _b : Object.assign({}, settingType_1.DEFAULT_STUDY_SETTINGS)); });
+    const serverDecks = deckRows.map((row) => { var _a, _b; return fromDeckRow(row, (_a = exercisesByDeck.get(row.id)) !== null && _a !== void 0 ? _a : [], (_b = settingsByDeck.get(row.id)) !== null && _b !== void 0 ? _b : { ...settingType_1.DEFAULT_STUDY_SETTINGS }); });
     const serverById = new Map(serverDecks.map((d) => [d.id, d]));
     const localById = new Map(localDecks.map((d) => [d.id, d]));
     // ── Phase 3: Merge — last-write-wins on updatedAt ───────────────────────────
@@ -166,9 +189,9 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
                 // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
                 const exercises = (_e = local.exercises) !== null && _e !== void 0 ? _e : [];
                 exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)));
-                const settings = (_f = local.studySettings) !== null && _f !== void 0 ? _f : Object.assign({}, settingType_1.DEFAULT_STUDY_SETTINGS);
+                const settings = (_f = local.studySettings) !== null && _f !== void 0 ? _f : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
                 settingUpserts.push(toStudySettingsRow(local.id, settings));
-                mergedDecks.push(Object.assign(Object.assign({}, local), { exercises, studySettings: settings, _localStatus: 'synced' }));
+                mergedDecks.push({ ...local, exercises, studySettings: settings, _localStatus: 'synced' });
                 pushedCount++;
             }
             else {
@@ -185,9 +208,9 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
                 // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
                 const exercises = (_j = local.exercises) !== null && _j !== void 0 ? _j : [];
                 exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)));
-                const settings = (_k = local.studySettings) !== null && _k !== void 0 ? _k : Object.assign({}, settingType_1.DEFAULT_STUDY_SETTINGS);
+                const settings = (_k = local.studySettings) !== null && _k !== void 0 ? _k : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
                 settingUpserts.push(toStudySettingsRow(local.id, settings));
-                mergedDecks.push(Object.assign(Object.assign({}, local), { exercises, studySettings: settings, _localStatus: 'synced' }));
+                mergedDecks.push({ ...local, exercises, studySettings: settings, _localStatus: 'synced' });
                 pushedCount++;
             }
             // _localStatus === 'synced' with no server record means the deck was deleted remotely — drop it.
@@ -247,13 +270,28 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
     }
     // ── Phase 5: Apply pending deletes ─────────────────────────────────────────
     if (pendingDeletes.length > 0) {
-        const now = new Date().toISOString();
-        await Promise.all([
-            client.from('exercises').update({ deleted_at: now }).in('deck_id', pendingDeletes),
-            client.from('decks').update({ deleted_at: now }).in('id', pendingDeletes),
-            // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
-            client.from('study_settings').delete().in('deck_id', pendingDeletes),
-        ]);
+        // Defense-in-depth: only delete decks the user actually owns. RLS is the first
+        // gate, but scoping in code too means a missing/broken policy — or a service-role
+        // client that bypasses RLS — can't wipe another user's rows.
+        const { data: ownedRows } = await client
+            .from('decks').select('id').eq('owner_id', userId).in('id', pendingDeletes);
+        const ownedDeckIds = (ownedRows !== null && ownedRows !== void 0 ? ownedRows : []).map((r) => r.id);
+        if (ownedDeckIds.length > 0) {
+            const now = new Date().toISOString();
+            // The Supabase client resolves with { error } instead of throwing, so a failed
+            // delete would slip past Promise.all silently and the caller would report a
+            // successful sync while the deck stays live on the server (and gets pulled back
+            // next cycle). Capture each result and surface the first error like Phase 4.
+            const deleteResults = await Promise.all([
+                client.from('exercises').update({ deleted_at: now }).in('deck_id', ownedDeckIds),
+                client.from('decks').update({ deleted_at: now }).in('id', ownedDeckIds),
+                // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
+                client.from('study_settings').delete().in('deck_id', ownedDeckIds),
+            ]);
+            const deleteError = (_l = deleteResults.find((r) => r.error)) === null || _l === void 0 ? void 0 : _l.error;
+            if (deleteError)
+                return { mergedDecks: localDecks, error: deleteError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
+        }
     }
     const exercisesPushed = exUpserts.length;
     const exercisesPulled = mergedDecks

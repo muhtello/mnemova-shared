@@ -57,7 +57,10 @@ async function updateProfile(client, userId, data) {
         return { error: profileError.message };
     // Mirror to auth metadata so user_metadata stays consistent without extra DB reads
     const { error: metaError } = await client.auth.updateUser({
-        data: Object.assign({ full_name: fullName }, (data.avatarUrl !== undefined && { avatar_url: data.avatarUrl.trim() || null })),
+        data: {
+            full_name: fullName,
+            ...(data.avatarUrl !== undefined && { avatar_url: data.avatarUrl.trim() || null }),
+        },
     });
     return { error: (_e = metaError === null || metaError === void 0 ? void 0 : metaError.message) !== null && _e !== void 0 ? _e : null };
 }

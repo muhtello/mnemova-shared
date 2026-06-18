@@ -15,7 +15,10 @@ function mergeResources(base, extra) {
     const out = {};
     const locales = new Set([...Object.keys(base), ...Object.keys(extra)]);
     for (const lng of locales) {
-        out[lng] = Object.assign(Object.assign({}, base[lng]), extra[lng]);
+        out[lng] = {
+            ...base[lng],
+            ...extra[lng],
+        };
     }
     return out;
 }

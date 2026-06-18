@@ -96,7 +96,7 @@ function toExerciseRow(deckId: string, exercise: Exercise) {
     id: exercise.id, deck_id: deckId, type: exercise.type, question: exercise.question,
     properties, source_text: exercise.sourceText ?? null, source_range: exercise.sourceRange ?? null,
     highlight_color: exercise.highlightColor ?? null,
-    created_at: new Date(exercise.createdAt).toISOString(), updated_at: new Date().toISOString(), deleted_at: null,
+    created_at: msToISO(exercise.createdAt), updated_at: new Date().toISOString(), deleted_at: null,
   }
 }
 
@@ -138,6 +138,16 @@ function toISO(date: Date | string | undefined): string {
 function toTime(date: Date | string | undefined): number {
   if (!date) return 0
   return typeof date === 'string' ? new Date(date).getTime() : date.getTime()
+}
+
+// Safely convert a millisecond timestamp to ISO. Legacy exercises persisted before
+// `createdAt` existed can be undefined at runtime (the type says number, but old
+// local data predates it); a corrupt value can be NaN. Either would make
+// new Date(x).toISOString() throw RangeError and abort the whole sync — so fall
+// back to "now" instead.
+function msToISO(ms: number | undefined): string {
+  if (typeof ms !== 'number' || !Number.isFinite(ms)) return new Date().toISOString()
+  return new Date(ms).toISOString()
 }
 
 function isValidUUID(id: string): boolean {
@@ -290,13 +300,28 @@ export async function syncDecks(
   // ── Phase 5: Apply pending deletes ─────────────────────────────────────────
 
   if (pendingDeletes.length > 0) {
-    const now = new Date().toISOString()
-    await Promise.all([
-      client.from('exercises').update({ deleted_at: now }).in('deck_id', pendingDeletes),
-      client.from('decks').update({ deleted_at: now }).in('id', pendingDeletes),
-      // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
-      client.from('study_settings').delete().in('deck_id', pendingDeletes),
-    ])
+    // Defense-in-depth: only delete decks the user actually owns. RLS is the first
+    // gate, but scoping in code too means a missing/broken policy — or a service-role
+    // client that bypasses RLS — can't wipe another user's rows.
+    const { data: ownedRows } = await client
+      .from('decks').select('id').eq('owner_id', userId).in('id', pendingDeletes)
+    const ownedDeckIds = (ownedRows ?? []).map((r: { id: string }) => r.id)
+
+    if (ownedDeckIds.length > 0) {
+      const now = new Date().toISOString()
+      // The Supabase client resolves with { error } instead of throwing, so a failed
+      // delete would slip past Promise.all silently and the caller would report a
+      // successful sync while the deck stays live on the server (and gets pulled back
+      // next cycle). Capture each result and surface the first error like Phase 4.
+      const deleteResults = await Promise.all([
+        client.from('exercises').update({ deleted_at: now }).in('deck_id', ownedDeckIds),
+        client.from('decks').update({ deleted_at: now }).in('id', ownedDeckIds),
+        // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
+        client.from('study_settings').delete().in('deck_id', ownedDeckIds),
+      ])
+      const deleteError = deleteResults.find((r) => r.error)?.error
+      if (deleteError) return { mergedDecks: localDecks, error: deleteError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 }
+    }
   }
 
   const exercisesPushed = exUpserts.length

@@ -11,6 +11,19 @@ function rowToSessionLog(row) {
         savedAt: new Date(row.saved_at).getTime(),
     };
 }
+// Shape a local session for insertion. Kept separate so the push step can build
+// the whole batch in one map() and stay easy to test.
+function sessionToRow(session, userId) {
+    return {
+        id: session.id,
+        user_id: userId,
+        guest_session_id: null,
+        deck_id: session.deckId || null,
+        stats: session.stats,
+        attempts: session.attempts,
+        saved_at: new Date(session.savedAt).toISOString(),
+    };
+}
 // ─── syncSessionHistory ───────────────────────────────────────────────────────
 //
 // Bidirectional sync for the `session_logs` table (authenticated users only).
@@ -35,20 +48,21 @@ async function syncSessionHistory(client, localSessions, userId) {
     }
     const serverIds = new Set((serverRows !== null && serverRows !== void 0 ? serverRows : []).map((r) => r.id));
     // ── 2. Push sessions the server hasn't seen yet ───────────────────────────────
-    const syncedIds = [];
-    for (const session of localSessions.filter(s => !serverIds.has(s.id))) {
-        const { error } = await client.from('session_logs').insert({
-            id: session.id,
-            user_id: userId,
-            guest_session_id: null,
-            deck_id: session.deckId || null,
-            stats: session.stats,
-            attempts: session.attempts,
-            saved_at: new Date(session.savedAt).toISOString(),
-        });
-        if (!error)
-            syncedIds.push(session.id);
-    }
+    // Batch into a single INSERT: one round-trip instead of one per session, which
+    // matters when a user returns from offline with many unsynced sessions.
+    const newSessions = localSessions.filter(s => !serverIds.has(s.id));
     const pulledSessions = serverRows.map(rowToSessionLog);
-    return { pulledSessions, syncedIds, error: null };
+    if (newSessions.length === 0) {
+        return { pulledSessions, syncedIds: [], error: null };
+    }
+    const { error: pushError } = await client
+        .from('session_logs')
+        .insert(newSessions.map(session => sessionToRow(session, userId)));
+    // The client resolves with { error } rather than throwing, so surface a failed
+    // push instead of silently reporting success. The batch is atomic, so on error
+    // nothing was synced — syncedIds stays empty.
+    if (pushError) {
+        return { pulledSessions, syncedIds: [], error: pushError.message };
+    }
+    return { pulledSessions, syncedIds: newSessions.map(s => s.id), error: null };
 }

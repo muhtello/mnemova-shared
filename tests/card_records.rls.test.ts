@@ -82,7 +82,9 @@ describe.skipIf(!canRun())('card_records RLS — authenticated', () => {
   })
 })
 
-describe.skipIf(!canRun())('card_records RLS — anon (guest)', () => {
+// Guests are local-only: the `anon` role has NO policies on `card_records`, so
+// every anon insert is denied regardless of header or guest_session_id.
+describe.skipIf(!canRun())('card_records RLS — anon/guest fully denied', () => {
   let guestId: string
   let exId = ''
   const cleanups: Array<() => Promise<unknown>> = []
@@ -97,29 +99,17 @@ describe.skipIf(!canRun())('card_records RLS — anon (guest)', () => {
 
   afterAll(() => Promise.allSettled(cleanups.map((c) => c())))
 
-  it('INSERT: guest client (matching header) can insert a record', async () => {
-    try {
-      const { error } = await guestClient(guestId).from('card_records').insert({
-        exercise_id: exId, guest_session_id: guestId,
-        interval_days: 1, due_date: NOW, last_reviewed: NOW, consecutive_same_rating: 0,
-      })
-      expect(error).toBeNull()
-    } finally {
-      await adminClient().from('card_records').delete().eq('guest_session_id', guestId)
-    }
-  })
-
-  it('INSERT: plain anon client (no header) cannot insert — WITH CHECK blocks it', async () => {
-    const { error } = await anonClient().from('card_records').insert({
+  it('INSERT: guest client (with header) cannot insert a record', async () => {
+    const { error } = await guestClient(guestId).from('card_records').insert({
       exercise_id: exId, guest_session_id: guestId,
       interval_days: 1, due_date: NOW, last_reviewed: NOW, consecutive_same_rating: 0,
     })
     expect(error).not.toBeNull()
   })
 
-  it('INSERT: guest client cannot insert with null guest_session_id', async () => {
-    const { error } = await guestClient(guestId).from('card_records').insert({
-      exercise_id: exId, guest_session_id: null,
+  it('INSERT: plain anon client (no header) cannot insert', async () => {
+    const { error } = await anonClient().from('card_records').insert({
+      exercise_id: exId, guest_session_id: guestId,
       interval_days: 1, due_date: NOW, last_reviewed: NOW, consecutive_same_rating: 0,
     })
     expect(error).not.toBeNull()

@@ -68,26 +68,57 @@ function applyRating(record, rating, settings, sessionHardCount) {
         : 0;
     // ── Again: card stays in repeat pool — no dueDate change yet ─────────
     if (rating === "again") {
-        return Object.assign(Object.assign({}, record), { lastReviewed: now, lastRating: rating, consecutiveSameRating: streak });
+        return {
+            ...record,
+            lastReviewed: now,
+            lastRating: rating,
+            consecutiveSameRating: streak,
+        };
     }
     // ── Hard: within budget → in-session; over budget → defer ────────────
     if (rating === "hard") {
         if (sessionHardCount < settings.maxHardRepeats) {
-            return Object.assign(Object.assign({}, record), { lastReviewed: now, lastRating: rating, consecutiveSameRating: streak });
+            return {
+                ...record,
+                lastReviewed: now,
+                lastRating: rating,
+                consecutiveSameRating: streak,
+            };
         }
         else {
             const dueDate = now + settings.hardDelayHours * HOUR_MS;
-            return Object.assign(Object.assign({}, record), { intervalDays: settings.hardDelayHours / 24, dueDate, lastReviewed: now, lastRating: rating, consecutiveSameRating: streak });
+            return {
+                ...record,
+                intervalDays: settings.hardDelayHours / 24,
+                dueDate,
+                lastReviewed: now,
+                lastRating: rating,
+                consecutiveSameRating: streak,
+            };
         }
     }
     // ── Good: base interval + streak growth ───────────────────────────────
     if (rating === "good") {
         const days = settings.goodDays + streak * settings.intervalDayIncrement;
-        return Object.assign(Object.assign({}, record), { intervalDays: days, dueDate: now + days * DAY_MS, lastReviewed: now, lastRating: rating, consecutiveSameRating: streak });
+        return {
+            ...record,
+            intervalDays: days,
+            dueDate: now + days * DAY_MS,
+            lastReviewed: now,
+            lastRating: rating,
+            consecutiveSameRating: streak,
+        };
     }
     // ── Easy: larger base interval + streak growth ────────────────────────
     const days = settings.easyDays + streak * settings.intervalDayIncrement;
-    return Object.assign(Object.assign({}, record), { intervalDays: days, dueDate: now + days * DAY_MS, lastReviewed: now, lastRating: rating, consecutiveSameRating: streak });
+    return {
+        ...record,
+        intervalDays: days,
+        dueDate: now + days * DAY_MS,
+        lastReviewed: now,
+        lastRating: rating,
+        consecutiveSameRating: streak,
+    };
 }
 // ─── Again repeat gate ────────────────────────────────────────────────────────
 function shouldRepeatAgain(item, strategy) {

@@ -18,8 +18,17 @@ exports.deleteAccount = deleteAccount;
 // END; $$;
 async function deleteAccount(supabase, userId) {
     var _a;
-    // Remove avatar file — best-effort, don't fail if it's missing
-    await supabase.storage.from('avatars').remove([`${userId}/avatar.jpg`]);
+    // Remove avatar files — best-effort, don't fail if storage cleanup hiccups.
+    // List the user's folder and delete whatever is actually there rather than
+    // guessing a filename: mobile writes a fixed `avatar.jpg`, but web names files
+    // `<timestamp>.<ext>` (png/webp/…) and leaves older uploads behind, so a
+    // hardcoded path would orphan every web avatar on account deletion.
+    const { data: avatarFiles } = await supabase.storage.from('avatars').list(userId);
+    if (avatarFiles && avatarFiles.length > 0) {
+        await supabase.storage
+            .from('avatars')
+            .remove(avatarFiles.map((file) => `${userId}/${file.name}`));
+    }
     const { data, error } = await supabase.rpc('delete_user_account');
     if (error)
         return { error: error.message };

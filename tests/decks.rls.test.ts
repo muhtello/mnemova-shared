@@ -77,34 +77,23 @@ describe.skipIf(!canRun())('decks RLS — authenticated', () => {
   })
 })
 
-describe.skipIf(!canRun())('decks RLS — anon (hardened: x-app-guest-id header scoped)', () => {
+// Guests are local-only: the `anon` role has NO policies on `decks`, so it is
+// fully default-denied (no read, no write). These tests pin that guarantee.
+describe.skipIf(!canRun())('decks RLS — anon/guest fully denied', () => {
   let guestDeckId = ''
-  let authDeckId = ''
-  let authUser: Awaited<ReturnType<typeof createTestUser>>
   const guestOwnerId = crypto.randomUUID()
-  const otherGuestId = crypto.randomUUID()
   const cleanups: Array<() => Promise<unknown>> = []
 
   beforeAll(async () => {
+    // Seed a deck via the service role so we can prove anon cannot read it.
     guestDeckId = await adminInsertDeck(guestOwnerId)
     cleanups.push(() => adminDelete('decks', guestDeckId))
-
-    authUser = await createTestUser('anon-sec')
-    cleanups.push(authUser.cleanup)
-    authDeckId = await adminInsertDeck(authUser.userId)
-    cleanups.push(() => adminDelete('decks', authDeckId))
   })
 
   afterAll(() => Promise.allSettled(cleanups.map((c) => c())))
 
-  it('SELECT: guest client with matching header sees its own deck', async () => {
+  it('SELECT: guest client (with header) gets 0 rows', async () => {
     const { data, error } = await guestClient(guestOwnerId).from('decks').select('id').eq('id', guestDeckId)
-    expect(error).toBeNull()
-    expect(data).toHaveLength(1)
-  })
-
-  it('SELECT: guest client with WRONG header gets 0 rows (policy scopes to header)', async () => {
-    const { data, error } = await guestClient(otherGuestId).from('decks').select('id').eq('id', guestDeckId)
     expect(error).toBeNull()
     expect(data).toHaveLength(0)
   })
@@ -115,26 +104,10 @@ describe.skipIf(!canRun())('decks RLS — anon (hardened: x-app-guest-id header 
     expect(data).toHaveLength(0)
   })
 
-  it("SELECT: guest client cannot read an authenticated user's deck", async () => {
-    const { data, error } = await guestClient(guestOwnerId).from('decks').select('id').eq('id', authDeckId)
-    expect(error).toBeNull()
-    expect(data).toHaveLength(0)
-  })
-
-  it('INSERT: guest can insert a deck with owner_id matching their header', async () => {
-    const { data, error } = await guestClient(guestOwnerId)
-      .from('decks')
-      .insert({ title: 'guest-new-deck', owner_id: guestOwnerId })
-      .select('id')
-      .single()
-    expect(error).toBeNull()
-    if (data?.id) await adminDelete('decks', data.id)
-  })
-
-  it('INSERT: WITH CHECK blocks guest inserting deck with a different owner_id', async () => {
+  it('INSERT: guest client cannot insert a deck', async () => {
     const { error } = await guestClient(guestOwnerId)
       .from('decks')
-      .insert({ title: 'hijacked', owner_id: otherGuestId })
+      .insert({ title: 'guest-new-deck', owner_id: guestOwnerId })
     expect(error).not.toBeNull()
   })
 })
