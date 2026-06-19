@@ -16,7 +16,6 @@ export interface EditSession {
   id: string;
   shortCode: string;
   ownerId: string;
-  isGuest: boolean;
   deviceId: string;
   snapshot: EditSessionSnapshot;
   status: EditSessionStatus;
@@ -34,7 +33,6 @@ export interface EditSession {
 export interface OpenEditSessionInput {
   deck: Deck;
   ownerId: string;
-  isGuest: boolean;
   deviceId: string;
 }
 
@@ -42,6 +40,8 @@ export interface OpenEditSessionResult {
   sessionId: string | null;
   shortCode: string | null;
   expiresAt: string | null;
+  /** The deck id the session was opened for (lets the phone verify the session's deck). */
+  deckId: string | null;
   error: string | null;
 }
 
