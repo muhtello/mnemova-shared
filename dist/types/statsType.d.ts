@@ -28,7 +28,11 @@ export interface DeckStats {
     upcomingCount: number;
     /** Unix ms of most recent review across all exercises; null if never studied */
     lastStudiedAt: number | null;
-    /** Unix ms of the soonest upcoming card's dueDate; null if none */
+    /**
+     * Unix ms of the soonest dueDate among scheduled cards (status "due" or
+     * "upcoming"); null when none are scheduled. May be in the past when cards
+     * are overdue — compare to Date.now(): <= now means "due now", else "next in X".
+     */
     nextDueAt: number | null;
     /** (masteredCount / totalExercises) * 100; 0 when totalExercises is 0 */
     masteryRate: number;
