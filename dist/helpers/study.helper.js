@@ -37,7 +37,7 @@ function buildExercisePool(exercises, records, settings) {
         : Math.min(settings.maxCards, due.length);
     return due.slice(0, cap);
 }
-// ─── Random third-section picker ──────────────────────────────────────────────
+// ─── Uniform random picker ────────────────────────────────────────────────────
 /**
  * Picks one item from `pool` uniformly at random (every item equally likely).
  * Callers splice the returned index out of the pool, so repeated calls drain
