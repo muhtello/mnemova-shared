@@ -45,25 +45,15 @@ export function buildExercisePool(
 // ─── Random third-section picker ──────────────────────────────────────────────
 
 /**
- * Divides `pool` into three equal sections, picks one section at random,
- * then picks a random item from that section.
+ * Picks one item from `pool` uniformly at random (every item equally likely).
+ * Callers splice the returned index out of the pool, so repeated calls drain
+ * the pool as an unbiased shuffle. (An earlier three-section scheme gave each
+ * section equal probability despite unequal sizes, over-picking the deck tail.)
  */
 export function pickFromPool<T>(pool: T[]): { item: T; index: number } | null {
     if (pool.length === 0) return null;
-    if (pool.length === 1) return { item: pool[0], index: 0 };
 
-    const size = pool.length;
-    const third = Math.ceil(size / 3);
-
-    const sections = [
-        { start: 0, end: Math.min(third, size) },
-        { start: Math.min(third, size), end: Math.min(third * 2, size) },
-        { start: Math.min(third * 2, size), end: size },
-    ].filter((s) => s.start < s.end);
-
-    const section = sections[Math.floor(Math.random() * sections.length)];
-    const index = section.start + Math.floor(Math.random() * (section.end - section.start));
-
+    const index = Math.floor(Math.random() * pool.length);
     return { item: pool[index], index };
 }
 
