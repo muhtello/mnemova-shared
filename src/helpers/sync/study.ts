@@ -25,7 +25,9 @@ function fromCardRecordRow(row: CardRecordRow): CardRecord {
 function toCardRecordFields(record: CardRecord, userId: string) {
   return {
     user_id: userId, guest_session_id: null, exercise_id: record.exerciseId,
-    interval_days: Math.round(record.intervalDays),
+    // interval_days is `real` in the DB, so sub-day Hard intervals
+    // (hardDelayHours/24, e.g. 0.166) persist losslessly — no rounding.
+    interval_days: record.intervalDays,
     due_date: new Date(record.dueDate).toISOString(),
     last_reviewed: record.lastReviewed > 0 ? new Date(record.lastReviewed).toISOString() : null,
     last_rating: record.lastRating ?? null,
