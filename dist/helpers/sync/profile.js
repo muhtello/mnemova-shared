@@ -6,37 +6,48 @@ exports.updateProfile = updateProfile;
 // Creates the profile row if missing, then returns the full profile.
 // Profile is considered complete when both first_name and last_name are set.
 async function ensureProfile(client, userId, email) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
-    const empty = {
-        isComplete: false, firstName: '', lastName: '', fullName: '',
-        phone: '', avatarUrl: '', birthDate: '', dailyGoalCards: 20, preferredStudyTime: 'flexible',
-    };
-    await client
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    // Create the row if missing. A failed create must not be swallowed — otherwise
+    // the read below surfaces as a misleading "empty/incomplete" profile.
+    const { error: upsertError } = await client
         .from('profiles')
         .upsert({ id: userId, email }, { onConflict: 'id', ignoreDuplicates: true });
+    if (upsertError) {
+        throw new Error(`ensureProfile: failed to create profile row: ${upsertError.message}`);
+    }
     const { data, error } = await client
         .from('profiles')
         .select('first_name, last_name, full_name, phone, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
         .eq('id', userId)
         .single();
-    if (error || !data)
-        return empty;
-    const firstName = (_a = data.first_name) !== null && _a !== void 0 ? _a : '';
-    const lastName = (_b = data.last_name) !== null && _b !== void 0 ? _b : '';
-    const fullName = [firstName, lastName].filter(Boolean).join(' ') || ((_c = data.full_name) !== null && _c !== void 0 ? _c : '');
+    // The row exists (just upserted), so an error/missing here is a real read
+    // failure — NOT a new user. Returning a default empty profile would silently
+    // force re-onboarding and let the edit form overwrite real data with blanks,
+    // so fail loudly instead and let the caller's error boundary handle it.
+    if (error || !data) {
+        throw new Error(`ensureProfile: failed to load profile: ${(_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : 'no row returned'}`);
+    }
+    const firstName = (_b = data.first_name) !== null && _b !== void 0 ? _b : '';
+    const lastName = (_c = data.last_name) !== null && _c !== void 0 ? _c : '';
+    const fullName = [firstName, lastName].filter(Boolean).join(' ') || ((_d = data.full_name) !== null && _d !== void 0 ? _d : '');
     return {
         isComplete: firstName.trim().length > 0 && lastName.trim().length > 0,
         firstName, lastName, fullName,
-        phone: (_d = data.phone) !== null && _d !== void 0 ? _d : '',
-        avatarUrl: (_e = data.avatar_url) !== null && _e !== void 0 ? _e : '',
-        birthDate: (_f = data.birth_date) !== null && _f !== void 0 ? _f : '',
-        dailyGoalCards: (_g = data.daily_goal_cards) !== null && _g !== void 0 ? _g : 20,
-        preferredStudyTime: (_h = data.preferred_study_time) !== null && _h !== void 0 ? _h : 'flexible',
+        phone: (_e = data.phone) !== null && _e !== void 0 ? _e : '',
+        avatarUrl: (_f = data.avatar_url) !== null && _f !== void 0 ? _f : '',
+        birthDate: (_g = data.birth_date) !== null && _g !== void 0 ? _g : '',
+        dailyGoalCards: (_h = data.daily_goal_cards) !== null && _h !== void 0 ? _h : 20,
+        preferredStudyTime: (_j = data.preferred_study_time) !== null && _j !== void 0 ? _j : 'flexible',
     };
 }
 // ─── updateProfile ────────────────────────────────────────────────────────────
 // Writes editable fields to the profiles table and mirrors full_name + avatar_url
 // to auth user_metadata so UI components reading user_metadata stay in sync.
+// `error` is a hard failure: the profile was NOT saved. `metadataWarning` is
+// non-fatal: the profile DID save (profiles is the source of truth), but the
+// best-effort auth user_metadata mirror failed, so cached UI fields (nav name/
+// avatar) may be stale until the next refresh. Callers should treat the two
+// distinctly — never report a metadataWarning as a failed save.
 async function updateProfile(client, userId, data) {
     var _a, _b, _c, _d, _e;
     const fullName = [data.firstName.trim(), data.lastName.trim()].filter(Boolean).join(' ');
@@ -54,13 +65,15 @@ async function updateProfile(client, userId, data) {
     })
         .eq('id', userId);
     if (profileError)
-        return { error: profileError.message };
-    // Mirror to auth metadata so user_metadata stays consistent without extra DB reads
+        return { error: profileError.message, metadataWarning: null };
+    // Mirror to auth metadata so user_metadata stays consistent without extra DB
+    // reads. Best-effort: the profiles write above already persisted the change,
+    // so a mirror failure is a stale-cache warning, not a failed save.
     const { error: metaError } = await client.auth.updateUser({
         data: {
             full_name: fullName,
             ...(data.avatarUrl !== undefined && { avatar_url: data.avatarUrl.trim() || null }),
         },
     });
-    return { error: (_e = metaError === null || metaError === void 0 ? void 0 : metaError.message) !== null && _e !== void 0 ? _e : null };
+    return { error: null, metadataWarning: (_e = metaError === null || metaError === void 0 ? void 0 : metaError.message) !== null && _e !== void 0 ? _e : null };
 }

@@ -10,8 +10,10 @@ export declare function getInitialRecord(exerciseId: string): CardRecord;
  */
 export declare function buildExercisePool(exercises: Exercise[], records: Record<string, CardRecord>, settings: StudySettings): Exercise[];
 /**
- * Divides `pool` into three equal sections, picks one section at random,
- * then picks a random item from that section.
+ * Picks one item from `pool` uniformly at random (every item equally likely).
+ * Callers splice the returned index out of the pool, so repeated calls drain
+ * the pool as an unbiased shuffle. (An earlier three-section scheme gave each
+ * section equal probability despite unequal sizes, over-picking the deck tail.)
  */
 export declare function pickFromPool<T>(pool: T[]): {
     item: T;

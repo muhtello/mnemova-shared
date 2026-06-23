@@ -22,4 +22,5 @@ export interface ProfileUpdate {
 export declare function ensureProfile(client: SupabaseClient, userId: string, email: string): Promise<ProfileData>;
 export declare function updateProfile(client: SupabaseClient, userId: string, data: ProfileUpdate): Promise<{
     error: string | null;
+    metadataWarning: string | null;
 }>;

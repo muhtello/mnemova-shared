@@ -48,14 +48,14 @@ export async function ensureProfile(
   userId: string,
   email: string,
 ): Promise<ProfileData> {
-  const empty: ProfileData = {
-    isComplete: false, firstName: '', lastName: '', fullName: '',
-    phone: '', avatarUrl: '', birthDate: '', dailyGoalCards: 20, preferredStudyTime: 'flexible',
-  }
-
-  await client
+  // Create the row if missing. A failed create must not be swallowed — otherwise
+  // the read below surfaces as a misleading "empty/incomplete" profile.
+  const { error: upsertError } = await client
     .from('profiles')
     .upsert({ id: userId, email }, { onConflict: 'id', ignoreDuplicates: true })
+  if (upsertError) {
+    throw new Error(`ensureProfile: failed to create profile row: ${upsertError.message}`)
+  }
 
   const { data, error } = await client
     .from('profiles')
@@ -63,7 +63,13 @@ export async function ensureProfile(
     .eq('id', userId)
     .single<ProfileRow>()
 
-  if (error || !data) return empty
+  // The row exists (just upserted), so an error/missing here is a real read
+  // failure — NOT a new user. Returning a default empty profile would silently
+  // force re-onboarding and let the edit form overwrite real data with blanks,
+  // so fail loudly instead and let the caller's error boundary handle it.
+  if (error || !data) {
+    throw new Error(`ensureProfile: failed to load profile: ${error?.message ?? 'no row returned'}`)
+  }
 
   const firstName = data.first_name ?? ''
   const lastName = data.last_name ?? ''
@@ -84,11 +90,16 @@ export async function ensureProfile(
 // Writes editable fields to the profiles table and mirrors full_name + avatar_url
 // to auth user_metadata so UI components reading user_metadata stay in sync.
 
+// `error` is a hard failure: the profile was NOT saved. `metadataWarning` is
+// non-fatal: the profile DID save (profiles is the source of truth), but the
+// best-effort auth user_metadata mirror failed, so cached UI fields (nav name/
+// avatar) may be stale until the next refresh. Callers should treat the two
+// distinctly — never report a metadataWarning as a failed save.
 export async function updateProfile(
   client: SupabaseClient,
   userId: string,
   data: ProfileUpdate,
-): Promise<{ error: string | null }> {
+): Promise<{ error: string | null; metadataWarning: string | null }> {
   const fullName = [data.firstName.trim(), data.lastName.trim()].filter(Boolean).join(' ')
 
   const { error: profileError } = await client
@@ -105,9 +116,11 @@ export async function updateProfile(
     })
     .eq('id', userId)
 
-  if (profileError) return { error: profileError.message }
+  if (profileError) return { error: profileError.message, metadataWarning: null }
 
-  // Mirror to auth metadata so user_metadata stays consistent without extra DB reads
+  // Mirror to auth metadata so user_metadata stays consistent without extra DB
+  // reads. Best-effort: the profiles write above already persisted the change,
+  // so a mirror failure is a stale-cache warning, not a failed save.
   const { error: metaError } = await client.auth.updateUser({
     data: {
       full_name: fullName,
@@ -115,5 +128,5 @@ export async function updateProfile(
     },
   })
 
-  return { error: metaError?.message ?? null }
+  return { error: null, metadataWarning: metaError?.message ?? null }
 }

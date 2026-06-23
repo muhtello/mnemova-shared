@@ -75,7 +75,11 @@ export function getDeckStats(
                     : Math.max(lastStudiedAt, es.lastReviewed);
         }
 
-        if (es.status === "upcoming") {
+        // Soonest dueDate among scheduled cards. Includes "due" (overdue, dueDate
+        // in the past) as well as "upcoming" — otherwise an all-overdue deck would
+        // report null ("nothing coming up") while cards are actionable right now.
+        // "new" (dueDate 0) and "mastered" are excluded; they aren't scheduled reviews.
+        if (es.status === "due" || es.status === "upcoming") {
             nextDueAt =
                 nextDueAt === null
                     ? es.dueDate

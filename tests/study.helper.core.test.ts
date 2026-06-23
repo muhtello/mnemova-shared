@@ -94,4 +94,20 @@ describe('pickFromPool', () => {
       expect(result!.index).toBeLessThan(pool.length);
     }
   });
+  // Regression for Bug #4: a size that isn't a multiple of 3 used to over-pick
+  // the deck tail (last index ~1/3 vs ~1/5). Every index must now be ~uniform.
+  it('picks every index with roughly uniform probability (no tail bias)', () => {
+    const size = 5;
+    const pool = Array.from({ length: size }, (_, i) => i);
+    const counts = new Array(size).fill(0);
+    const iterations = 60_000;
+    for (let i = 0; i < iterations; i++) counts[pickFromPool(pool)!.index]++;
+
+    const expected = iterations / size;
+    for (const count of counts) {
+      // ±10% is ~12σ here — safe from flakiness; the old code put index 4 at ~1/3.
+      expect(count).toBeGreaterThan(expected * 0.9);
+      expect(count).toBeLessThan(expected * 1.1);
+    }
+  });
 });

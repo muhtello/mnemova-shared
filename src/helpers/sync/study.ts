@@ -25,7 +25,9 @@ function fromCardRecordRow(row: CardRecordRow): CardRecord {
 function toCardRecordFields(record: CardRecord, userId: string) {
   return {
     user_id: userId, guest_session_id: null, exercise_id: record.exerciseId,
-    interval_days: Math.round(record.intervalDays),
+    // interval_days is `real` in the DB, so sub-day Hard intervals
+    // (hardDelayHours/24, e.g. 0.166) persist losslessly — no rounding.
+    interval_days: record.intervalDays,
     due_date: new Date(record.dueDate).toISOString(),
     last_reviewed: record.lastReviewed > 0 ? new Date(record.lastReviewed).toISOString() : null,
     last_rating: record.lastRating ?? null,
@@ -74,7 +76,18 @@ export async function syncStudyData(
   const toUpdate: Array<{ id: string; fields: ReturnType<typeof toCardRecordFields> }> = []
   let pulledCount = 0
 
+  // A progress reset this cycle must win unconditionally. Built before the merge loop
+  // so it guards BOTH paths: a reset that re-initialised the local record (lastReviewed === 0)
+  // would otherwise lose to a stale server row here in step 2 (serverTs > 0); a reset that
+  // deleted the local record is guarded in step 3 below. Either way, never let stale server
+  // state silently undo the reset within this cycle.
+  const resetIds = new Set(pendingResetExerciseIds)
+
   for (const record of Object.values(localFlat)) {
+    if (resetIds.has(record.exerciseId)) {
+      mergedFlatRecords[record.exerciseId] = record
+      continue
+    }
     const serverRow = serverMap.get(record.exerciseId)
     const serverTs = serverRow?.last_reviewed ? new Date(serverRow.last_reviewed).getTime() : 0
     if (serverRow && serverTs > record.lastReviewed) {
@@ -95,9 +108,7 @@ export async function syncStudyData(
   // NOTE: syncRecordResets runs before syncStudyData in runSync.ts (Step 2 → Step 3).
   // If a reset's server DELETE failed, the record would still be in serverMap. We must
   // not re-pull it, otherwise the user's progress reset would be silently undone.
-  // The caller passes pendingResetExerciseIds for exactly this guard.
-
-  const resetIds = new Set(pendingResetExerciseIds)
+  // The caller passes pendingResetExerciseIds for exactly this guard (resetIds, built above).
 
   for (const [exerciseId, serverRow] of serverMap) {
     if (!mergedFlatRecords[exerciseId] && !resetIds.has(exerciseId)) {

@@ -11,12 +11,12 @@ describe('applyRating', () => {
   afterEach(() => vi.useRealTimers());
 
   describe('"again"', () => {
-    it('does not change dueDate (card stays in repeat pool)', () => {
-      const record = makeRecord({ dueDate: NOW - 5000 });
-      expect(applyRating(record, 'again', testSettings, 0).dueDate).toBe(record.dueDate);
+    it('resets dueDate to now so the failed card resurfaces next session', () => {
+      const record = makeRecord({ dueDate: NOW + 20 * DAY_MS });
+      expect(applyRating(record, 'again', testSettings, 0).dueDate).toBe(NOW);
     });
-    it('does not change intervalDays', () => {
-      expect(applyRating(makeRecord({ intervalDays: 7 }), 'again', testSettings, 0).intervalDays).toBe(7);
+    it('resets intervalDays to 1', () => {
+      expect(applyRating(makeRecord({ intervalDays: 7 }), 'again', testSettings, 0).intervalDays).toBe(1);
     });
     it('updates lastReviewed to now', () => {
       expect(applyRating(makeRecord(), 'again', testSettings, 0).lastReviewed).toBe(NOW);
