@@ -48,14 +48,14 @@ export async function ensureProfile(
   userId: string,
   email: string,
 ): Promise<ProfileData> {
-  const empty: ProfileData = {
-    isComplete: false, firstName: '', lastName: '', fullName: '',
-    phone: '', avatarUrl: '', birthDate: '', dailyGoalCards: 20, preferredStudyTime: 'flexible',
-  }
-
-  await client
+  // Create the row if missing. A failed create must not be swallowed — otherwise
+  // the read below surfaces as a misleading "empty/incomplete" profile.
+  const { error: upsertError } = await client
     .from('profiles')
     .upsert({ id: userId, email }, { onConflict: 'id', ignoreDuplicates: true })
+  if (upsertError) {
+    throw new Error(`ensureProfile: failed to create profile row: ${upsertError.message}`)
+  }
 
   const { data, error } = await client
     .from('profiles')
@@ -63,7 +63,13 @@ export async function ensureProfile(
     .eq('id', userId)
     .single<ProfileRow>()
 
-  if (error || !data) return empty
+  // The row exists (just upserted), so an error/missing here is a real read
+  // failure — NOT a new user. Returning a default empty profile would silently
+  // force re-onboarding and let the edit form overwrite real data with blanks,
+  // so fail loudly instead and let the caller's error boundary handle it.
+  if (error || !data) {
+    throw new Error(`ensureProfile: failed to load profile: ${error?.message ?? 'no row returned'}`)
+  }
 
   const firstName = data.first_name ?? ''
   const lastName = data.last_name ?? ''
