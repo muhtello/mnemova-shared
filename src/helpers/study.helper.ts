@@ -84,10 +84,17 @@ export function applyRating(
             ? record.consecutiveSameRating + 1
             : 0;
 
-    // ── Again: card stays in repeat pool — no dueDate change yet ─────────
+    // ── Again: failed card must resurface — reset schedule to due-now ─────
+    // In-session repeats are handled by shouldRepeatAgain(); but when a card
+    // ends a session on "again" (mode "never", or "random" after its retries),
+    // applyRating persists the final state. Leaving the old dueDate untouched
+    // would let a previously-scheduled card keep a future dueDate, so a just-
+    // failed card would be filtered out of the next session's pool for days.
     if (rating === "again") {
         return {
             ...record,
+            intervalDays: 1,
+            dueDate: now,           // due immediately so it returns next session
             lastReviewed: now,
             lastRating: rating,
             consecutiveSameRating: streak,

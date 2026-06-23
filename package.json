@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "tsc",
-    "test": "vitest run tests/study.helper.core.test.ts tests/study.helper.applyRating.test.ts tests/study.helper.gates.test.ts tests/sync.decks.delete-errors.test.ts tests/sync.decks.legacy-createdAt.test.ts tests/editSession.helper.test.ts tests/sync.sessionHistory.push.test.ts tests/deleteAccount.test.ts",
+    "test": "vitest run tests/study.helper.core.test.ts tests/study.helper.applyRating.test.ts tests/study.helper.gates.test.ts tests/sync.decks.delete-errors.test.ts tests/sync.decks.legacy-createdAt.test.ts tests/editSession.helper.test.ts tests/sync.sessionHistory.push.test.ts tests/sync.study.reset.test.ts tests/deleteAccount.test.ts",
     "test:integration": "vitest run tests/sync.integration.test.ts tests/sync.rls.auth-isolation.test.ts tests/sync.rls.guest-isolation.test.ts tests/decks.rls.test.ts tests/card_records.rls.test.ts tests/exercises.rls.test.ts tests/sync.decks.delete-scope.test.ts",
     "test:all": "vitest run",
     "test:watch": "vitest",
