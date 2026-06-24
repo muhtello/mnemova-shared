@@ -89,6 +89,12 @@
             "advancedModes": "Erweiterte Lernmodi",
             "priorityFeatures": "Prioritäre Funktionen",
             "noAds": "Keine Werbung"
+        },
+        "success": {
+            "title": "Du bist jetzt Pro!",
+            "subtitle": "Dein Konto wurde hochgestuft. Alles ist freigeschaltet.",
+            "cta": "Lernen starten",
+            "redirect": "Automatische Weiterleitung in {{seconds}}s"
         }
     }
 }

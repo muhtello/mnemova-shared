@@ -89,6 +89,12 @@
             "advancedModes": "Advanced Learning Modes",
             "priorityFeatures": "Priority Features",
             "noAds": "No Ads"
+        },
+        "success": {
+            "title": "You're now Pro!",
+            "subtitle": "Your account has been upgraded. Everything is unlocked.",
+            "cta": "Start studying",
+            "redirect": "Redirecting automatically in {{seconds}}s"
         }
     }
 }
