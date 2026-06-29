@@ -114,6 +114,95 @@
             }
         }
     },
+    "studySettings": {
+        "title": "Lerneinstellungen",
+        "sectionSession": "SITZUNG",
+        "maxCardsPerSession": {
+            "label": "Max. Karten pro Sitzung",
+            "hint": "0 = alle fälligen Übungen einbeziehen"
+        },
+        "cardsStepper": {
+            "label": "Karten pro Sitzung",
+            "max": "Maximale Übungen pro Sitzung",
+            "allDue": "Alle fälligen Übungen werden einbezogen",
+            "allToggle": "Alle Übungen (ohne Limit)"
+        },
+        "sectionRepeatAgain": "ERNEUT-KARTEN WIEDERHOLEN",
+        "repeatMode": {
+            "random": {
+                "label": "Zufällig",
+                "description": "Erneut-Karten kommen an einer zufälligen Position zurück in den Stapel, bis zu einer begrenzten Anzahl von Malen"
+            },
+            "allCorrect": {
+                "label": "Bis richtig",
+                "description": "Erneut-Karten kommen immer wieder zurück, bis sie richtig beantwortet werden"
+            },
+            "once": {
+                "label": "Einmal",
+                "description": "Erneut-Karten werden vor Sitzungsende noch einmal angezeigt"
+            },
+            "never": {
+                "label": "Nie",
+                "description": "Erneut-Karten werden innerhalb der Sitzung nicht wiederholt"
+            }
+        },
+        "maxReinsertions": {
+            "label": "Max. Wiedereinfügungen",
+            "hint": "Wie oft eine Erneut-Karte erneut in den Stapel aufgenommen wird"
+        },
+        "sectionHardCards": "SCHWIERIGE KARTEN",
+        "maxHardRepeats": {
+            "label": "Max. Wiederholungen pro Sitzung",
+            "hint": "Bevor auf den nächsten Tag verschoben wird"
+        },
+        "hardDelayHours": {
+            "label": "Verzögerung nach Sitzung (Stunden)",
+            "hint": "Gilt ab dem 2. „Schwierig“-Vorkommen"
+        },
+        "sectionSchedulingIntervals": "WIEDERHOLUNGSINTERVALLE",
+        "goodDays": {
+            "label": "Gut — erstes Intervall (Tage)",
+            "hint": "Tage, bis eine mit „Gut“ bewertete Karte erneut wiederholt wird"
+        },
+        "easyDays": {
+            "label": "Einfach — erstes Intervall (Tage)",
+            "hint": "Tage, bis eine mit „Einfach“ bewertete Karte erneut wiederholt wird"
+        },
+        "sectionTimer": "TIMER",
+        "timerEnabled": {
+            "label": "Mit Timer lernen",
+            "hint": "Antwort automatisch aufdecken, wenn die Zeit abläuft"
+        },
+        "timerSeconds": {
+            "hint": "Die Antwort wird automatisch aufgedeckt, wenn dies abläuft"
+        },
+        "resetDefaults": "Auf Standard zurücksetzen",
+        "save": "Einstellungen speichern",
+        "applyStart": "Übernehmen & Starten"
+    },
+    "sync": {
+        "noChanges": "Keine Änderungen zu synchronisieren.",
+        "syncing": "Synchronisiere…",
+        "error": "Synchronisierungsfehler: {{error}}",
+        "expired": "Synchronisierungsfenster abgelaufen",
+        "synced": "Synchronisiert {{time}}",
+        "notSynced": "Noch nicht synchronisiert"
+    },
+    "timeAgo": {
+        "justNow": "gerade eben",
+        "minutes_one": "vor {{count}} Min.",
+        "minutes_other": "vor {{count}} Min.",
+        "hours_one": "vor {{count}} Std.",
+        "hours_other": "vor {{count}} Std.",
+        "days_one": "vor {{count}} Tag",
+        "days_other": "vor {{count}} Tagen",
+        "inMinutes_one": "in {{count}} Min.",
+        "inMinutes_other": "in {{count}} Min.",
+        "inHours_one": "in {{count}} Std.",
+        "inHours_other": "in {{count}} Std.",
+        "inDays_one": "in {{count}} Tag",
+        "inDays_other": "in {{count}} Tagen"
+    },
     "stats": {
         "difficulty": "Schwierigkeit",
         "retention": "Behaltensrate",

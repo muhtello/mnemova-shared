@@ -114,6 +114,95 @@
       }
     }
   },
+  "studySettings": {
+    "title": "Study Settings",
+    "sectionSession": "SESSION",
+    "maxCardsPerSession": {
+      "label": "Max cards per session",
+      "hint": "0 = include all due exercises"
+    },
+    "cardsStepper": {
+      "label": "Cards per session",
+      "max": "Maximum exercises per session",
+      "allDue": "All due exercises will be included",
+      "allToggle": "All exercises (no limit)"
+    },
+    "sectionRepeatAgain": "REPEAT AGAIN CARDS",
+    "repeatMode": {
+      "random": {
+        "label": "Random",
+        "description": "Again cards re-enter the pool at a random position, up to a limited number of times"
+      },
+      "allCorrect": {
+        "label": "Until Correct",
+        "description": "Again cards keep re-entering the pool until answered correctly"
+      },
+      "once": {
+        "label": "Once",
+        "description": "Again cards are shown one more time before the session ends"
+      },
+      "never": {
+        "label": "Never",
+        "description": "Again cards are not repeated during the session"
+      }
+    },
+    "maxReinsertions": {
+      "label": "Max re-insertions",
+      "hint": "How many times an Again card re-enters the pool"
+    },
+    "sectionHardCards": "HARD CARDS",
+    "maxHardRepeats": {
+      "label": "Max repeats in session",
+      "hint": "Before deferring to the next day"
+    },
+    "hardDelayHours": {
+      "label": "Delay after session (hours)",
+      "hint": "Applied from the 2nd Hard occurrence onwards"
+    },
+    "sectionSchedulingIntervals": "SCHEDULING INTERVALS",
+    "goodDays": {
+      "label": "Good — first interval (days)",
+      "hint": "Days until a Good-rated card is reviewed again"
+    },
+    "easyDays": {
+      "label": "Easy — first interval (days)",
+      "hint": "Days until an Easy-rated card is reviewed again"
+    },
+    "sectionTimer": "TIMER",
+    "timerEnabled": {
+      "label": "Study with timer",
+      "hint": "Reveal answer automatically when time runs out"
+    },
+    "timerSeconds": {
+      "hint": "Answer reveals automatically when this runs out"
+    },
+    "resetDefaults": "Reset to Defaults",
+    "save": "Save Settings",
+    "applyStart": "Apply & Start"
+  },
+  "sync": {
+    "noChanges": "No changes to sync.",
+    "syncing": "Syncing…",
+    "error": "Sync error: {{error}}",
+    "expired": "Sync window expired",
+    "synced": "Synced {{time}}",
+    "notSynced": "Not synced yet"
+  },
+  "timeAgo": {
+    "justNow": "just now",
+    "minutes_one": "{{count}}m ago",
+    "minutes_other": "{{count}}m ago",
+    "hours_one": "{{count}}h ago",
+    "hours_other": "{{count}}h ago",
+    "days_one": "{{count}}d ago",
+    "days_other": "{{count}}d ago",
+    "inMinutes_one": "in {{count}}m",
+    "inMinutes_other": "in {{count}}m",
+    "inHours_one": "in {{count}}h",
+    "inHours_other": "in {{count}}h",
+    "inDays_one": "in {{count}}d",
+    "inDays_other": "in {{count}}d"
+  },
   "stats": {
     "difficulty": "Difficulty",
     "retention": "Retention",

@@ -114,6 +114,95 @@
       }
     }
   },
+  "studySettings": {
+    "title": "إعدادات الدراسة",
+    "sectionSession": "الجلسة",
+    "maxCardsPerSession": {
+      "label": "أقصى عدد بطاقات في الجلسة",
+      "hint": "0 = تضمين كل التمارين المستحقة"
+    },
+    "cardsStepper": {
+      "label": "البطاقات في الجلسة",
+      "max": "أقصى عدد تمارين في الجلسة",
+      "allDue": "ستُضمَّن جميع التمارين المستحقة",
+      "allToggle": "كل التمارين (بدون حد)"
+    },
+    "sectionRepeatAgain": "تكرار بطاقات «إعادة»",
+    "repeatMode": {
+      "random": {
+        "label": "عشوائي",
+        "description": "تُعاد بطاقات «إعادة» إلى المجموعة في موضع عشوائي، حتى عدد محدد من المرات"
+      },
+      "allCorrect": {
+        "label": "حتى الإجابة الصحيحة",
+        "description": "تستمر بطاقات «إعادة» في العودة إلى المجموعة حتى تُجاب بشكل صحيح"
+      },
+      "once": {
+        "label": "مرة واحدة",
+        "description": "تُعرض بطاقات «إعادة» مرة أخرى قبل انتهاء الجلسة"
+      },
+      "never": {
+        "label": "أبدًا",
+        "description": "لا تُعاد بطاقات «إعادة» خلال الجلسة"
+      }
+    },
+    "maxReinsertions": {
+      "label": "أقصى عدد لإعادة الإدراج",
+      "hint": "عدد مرات عودة بطاقة «إعادة» إلى المجموعة"
+    },
+    "sectionHardCards": "البطاقات الصعبة",
+    "maxHardRepeats": {
+      "label": "أقصى تكرار في الجلسة",
+      "hint": "قبل التأجيل إلى اليوم التالي"
+    },
+    "hardDelayHours": {
+      "label": "التأخير بعد الجلسة (ساعات)",
+      "hint": "يُطبَّق من المرة الثانية لتقييم «صعب» فما بعد"
+    },
+    "sectionSchedulingIntervals": "فواصل الجدولة",
+    "goodDays": {
+      "label": "جيد — الفاصل الأول (أيام)",
+      "hint": "عدد الأيام حتى تُراجَع بطاقة «جيد» مرة أخرى"
+    },
+    "easyDays": {
+      "label": "سهل — الفاصل الأول (أيام)",
+      "hint": "عدد الأيام حتى تُراجَع بطاقة «سهل» مرة أخرى"
+    },
+    "sectionTimer": "المؤقّت",
+    "timerEnabled": {
+      "label": "الدراسة بمؤقّت",
+      "hint": "إظهار الإجابة تلقائيًا عند انتهاء الوقت"
+    },
+    "timerSeconds": {
+      "hint": "تظهر الإجابة تلقائيًا عند انتهاء هذا الوقت"
+    },
+    "resetDefaults": "إعادة الضبط الافتراضي",
+    "save": "حفظ الإعدادات",
+    "applyStart": "تطبيق وبدء"
+  },
+  "sync": {
+    "noChanges": "لا توجد تغييرات للمزامنة.",
+    "syncing": "جارٍ المزامنة…",
+    "error": "خطأ في المزامنة: {{error}}",
+    "expired": "انتهت فترة المزامنة",
+    "synced": "تمت المزامنة {{time}}",
+    "notSynced": "لم تتم المزامنة بعد"
+  },
+  "timeAgo": {
+    "justNow": "الآن",
+    "minutes_one": "منذ {{count}} د",
+    "minutes_other": "منذ {{count}} د",
+    "hours_one": "منذ {{count}} س",
+    "hours_other": "منذ {{count}} س",
+    "days_one": "منذ {{count}} يوم",
+    "days_other": "منذ {{count}} يوم",
+    "inMinutes_one": "خلال {{count}} د",
+    "inMinutes_other": "خلال {{count}} د",
+    "inHours_one": "خلال {{count}} س",
+    "inHours_other": "خلال {{count}} س",
+    "inDays_one": "خلال {{count}} يوم",
+    "inDays_other": "خلال {{count}} يوم"
+  },
   "stats": {
     "difficulty": "الصعوبة",
     "retention": "الاحتفاظ",
