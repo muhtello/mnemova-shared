@@ -1,39 +1,31 @@
-// Cross-platform "todo"/"suggestion" model. Web (home suggestions) and mobile
-// (home todos) share the SAME relevance logic and ids; only the presentation
-// (icons, CTAs, translation keys) is platform-specific and lives in each app.
+// Cross-platform "todo" model: a short checklist of setup/progress milestones
+// shared by web and mobile. Both apps share the SAME ids and relevance logic;
+// only the presentation (icons, CTAs, translation keys) is platform-specific
+// and lives in each app. Per-app "suggestions" are a SEPARATE, local concept
+// and intentionally do NOT live here.
 
-// Canonical ids — kept identical to the ids both apps already persist as
-// "dismissed", so centralising the logic does NOT reset anyone's dismissals.
+// Canonical milestone ids — each has a clear "done" state. Kept identical to the
+// ids both apps already persist as "dismissed", so centralising the logic does
+// NOT reset anyone's dismissals.
 export type TodoId =
-  | "introduce-app"
-  | "use-on-desktop"
-  | "edit-on-desktop"
   | "create-first-deck"
   | "complete-first-session"
   | "sign-in-to-sync"
   | "enable-study-reminders"
-  | "closed-testing-feedback"
-  | "cards-due"
-  | "first-session"
-  | "build-library"
-  | "try-mobile";
+  | "build-library";
 
-// Superset of the state both home screens derive relevance from. A platform
-// fills the fields its item set actually uses and leaves the rest at defaults.
+// State both home screens derive milestone completion from. A platform fills the
+// fields its rendered milestones actually use and leaves the rest at defaults.
 export interface TodoSnapshot {
   deckCount: number;
-  totalCardsDue: number;
   hasStudied: boolean;
   isLoggedIn: boolean;
   notificationsEnabled: boolean;
-  isGuest: boolean;
 }
 
 export interface TodoDefinition {
   id: TodoId;
-  // Returns true once the item is satisfied and should auto-hide.
+  // True once the milestone is satisfied. The item STAYS visible but renders a
+  // "done" (green) state — it is not auto-hidden.
   isDone: (snapshot: TodoSnapshot) => boolean;
-  // Interpolation values for i18n (e.g. the live cards-due `count`, which also
-  // drives plural selection). Resolved per render so counts stay reactive.
-  getValues?: (snapshot: TodoSnapshot) => Record<string, unknown>;
 }

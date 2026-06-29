@@ -278,46 +278,15 @@
   },
   "todos": {
     "items": {
-      "introduce-app": {
-        "title": "New to Mnemova?",
-        "description": "Mnemova is a spaced-repetition study app that helps you build decks of flashcards and exercises, then schedules reviews so you remember more with less effort. Visit our website to learn more about how it works and what's coming next.",
-        "cta": "Visit website"
-      },
-      "use-on-desktop": {
-        "title": "Works great on a bigger screen too",
-        "description": "Building decks and exercises is faster with a keyboard. Open Mnemova on your computer to add decks and exercises, then study on the go from your phone — your progress syncs whether you're using a guest account or signed in.",
-        "cta": "Open on desktop"
-      },
-      "edit-on-desktop": {
-        "title": "Edit exercises on desktop",
-        "description": "Edit your exercises on your desktop computer and then sync your changes back to the mobile app. Open the session by clicking the desktop icon on the selected deck page.",
-        "cta": "Open on deck"
-      },
       "create-first-deck": {
         "title": "Create your first deck",
         "description": "Decks hold the exercises you'll study. Start with just one.",
         "cta": "Create a deck"
       },
-      "cards-due": {
-        "title_one": "You have {{count}} card due",
-        "title_other": "You have {{count}} cards due",
-        "description": "Run a quick session to stay on track with your reviews.",
-        "cta": "Start a session"
-      },
-      "first-session": {
-        "title": "Complete your first study session",
-        "description": "See how spaced repetition schedules your reviews for you.",
-        "cta": "Study now"
-      },
       "complete-first-session": {
         "title": "Run your first study session",
         "description": "Study sessions use spaced repetition to show you cards right before you forget them. Try a quick session on one of your decks to see how it adapts to your answers.",
         "cta": "Start studying"
-      },
-      "build-library": {
-        "title": "Build your library to 3 decks",
-        "description": "A broader library makes your study sessions more varied.",
-        "cta": "Manage decks"
       },
       "sign-in-to-sync": {
         "title": "Sign in to sync across devices",
@@ -329,15 +298,10 @@
         "description": "Enable notifications and we'll remind you when cards are due for review, so you don't lose your streak.",
         "cta": "Open settings"
       },
-      "try-mobile": {
-        "title": "Study on the go",
-        "description": "Use Mnemova on your phone — your decks sync automatically.",
-        "cta": "Get the app"
-      },
-      "closed-testing-feedback": {
-        "title": "We're in closed testing — tell us what's confusing",
-        "description": "Found a bug, a confusing screen, or something that just feels off? Send us your feedback so we can fix it before launch.",
-        "cta": "Send feedback"
+      "build-library": {
+        "title": "Build your library to 3 decks",
+        "description": "A broader library makes your study sessions more varied.",
+        "cta": "Manage decks"
       }
     }
   }

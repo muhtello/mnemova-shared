@@ -64,7 +64,7 @@ export {
 export { getUserTier } from "./helpers/tier.helper";
 export type { UserTierResult } from "./helpers/tier.helper";
 
-export { TODO_DEFINITIONS, selectActiveTodos } from "./helpers/todo.helper";
+export { TODO_DEFINITIONS, resolveTodos } from "./helpers/todo.helper";
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";
