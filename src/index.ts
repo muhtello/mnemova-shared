@@ -33,6 +33,8 @@ export { RC_ENTITLEMENT_ID, TIER_LIMITS, TIER_INFO } from "./types/tierType";
 
 export type { ExerciseStatus, ExerciseStats, DeckStats } from "./types/statsType";
 
+export type { TodoId, TodoSnapshot, TodoDefinition } from "./types/todoType";
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export {
   validateEmail, checkEmailConfirmed, resendConfirmationEmail,
@@ -61,6 +63,8 @@ export {
 
 export { getUserTier } from "./helpers/tier.helper";
 export type { UserTierResult } from "./helpers/tier.helper";
+
+export { TODO_DEFINITIONS, selectActiveTodos } from "./helpers/todo.helper";
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";

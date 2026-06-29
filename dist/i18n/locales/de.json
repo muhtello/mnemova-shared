@@ -212,11 +212,26 @@
     },
     "exercise": {
         "type": {
-            "flashcard": { "label": "Karteikarte", "description": "Frage & Antwort abrufen" },
-            "fillInTheBlank": { "label": "Lücke füllen", "description": "Fehlende(s) Wort(e) eingeben" },
-            "wordPick": { "label": "Wortauswahl", "description": "Fehlende(s) Wort(e) auswählen" },
-            "mcq": { "label": "Multiple Choice", "description": "Frage mit mehreren Optionen" },
-            "orderSentence": { "label": "Satz ordnen", "description": "Gemischte Wörter in die richtige Reihenfolge bringen" }
+            "flashcard": {
+                "label": "Karteikarte",
+                "description": "Frage & Antwort abrufen"
+            },
+            "fillInTheBlank": {
+                "label": "Lücke füllen",
+                "description": "Fehlende(s) Wort(e) eingeben"
+            },
+            "wordPick": {
+                "label": "Wortauswahl",
+                "description": "Fehlende(s) Wort(e) auswählen"
+            },
+            "mcq": {
+                "label": "Multiple Choice",
+                "description": "Frage mit mehreren Optionen"
+            },
+            "orderSentence": {
+                "label": "Satz ordnen",
+                "description": "Gemischte Wörter in die richtige Reihenfolge bringen"
+            }
         },
         "field": {
             "sourceText": "Quelltext",
@@ -235,8 +250,14 @@
     "billing": {
         "monthly": "Monatlich",
         "yearly": "Jährlich",
-        "free": { "label": "Kostenlos", "description": "Grundlegender Lernzugang" },
-        "pro": { "label": "Pro", "description": "Unbegrenztes Lernerlebnis" },
+        "free": {
+            "label": "Kostenlos",
+            "description": "Grundlegender Lernzugang"
+        },
+        "pro": {
+            "label": "Pro",
+            "description": "Unbegrenztes Lernerlebnis"
+        },
         "feature": {
             "qrSync": "QR-Sync",
             "mobilePractice": "Mobiles Üben",
@@ -253,6 +274,71 @@
             "subtitle": "Dein Konto wurde hochgestuft. Alles ist freigeschaltet.",
             "cta": "Lernen starten",
             "redirect": "Automatische Weiterleitung in {{seconds}}s"
+        }
+    },
+    "todos": {
+        "items": {
+            "introduce-app": {
+                "title": "Neu bei Mnemova?",
+                "description": "Mnemova ist eine Lern-App mit verteilter Wiederholung, mit der du Stapel aus Karteikarten und Übungen erstellst. Wiederholungen werden so geplant, dass du mit weniger Aufwand mehr behältst. Besuche unsere Website, um mehr darüber zu erfahren, wie es funktioniert und was als Nächstes kommt.",
+                "cta": "Website besuchen"
+            },
+            "use-on-desktop": {
+                "title": "Funktioniert auch auf einem größeren Bildschirm super",
+                "description": "Stapel und Übungen erstellst du mit einer Tastatur schneller. Öffne Mnemova auf deinem Computer, um Stapel und Übungen hinzuzufügen, und lerne unterwegs mit deinem Handy weiter — dein Fortschritt wird synchronisiert, egal ob du ein Gastkonto nutzt oder angemeldet bist.",
+                "cta": "Auf dem Computer öffnen"
+            },
+            "edit-on-desktop": {
+                "title": "Übungen am Computer bearbeiten",
+                "description": "Bearbeite deine Übungen auf deinem Computer und synchronisiere die Änderungen anschließend mit der mobilen App. Öffne die Sitzung über das Desktop-Symbol auf der Stapelseite.",
+                "cta": "Im Stapel öffnen"
+            },
+            "create-first-deck": {
+                "title": "Erstelle dein erstes Deck",
+                "description": "Decks enthalten die Übungen, die du lernst. Fang mit einem an.",
+                "cta": "Deck erstellen"
+            },
+            "cards-due": {
+                "title_one": "Du hast {{count}} fällige Karte",
+                "title_other": "Du hast {{count}} fällige Karten",
+                "description": "Mach eine kurze Sitzung, um bei deinen Wiederholungen am Ball zu bleiben.",
+                "cta": "Sitzung starten"
+            },
+            "first-session": {
+                "title": "Schließe deine erste Lernsitzung ab",
+                "description": "Sieh, wie verteiltes Wiederholen deine Reviews für dich plant.",
+                "cta": "Jetzt lernen"
+            },
+            "complete-first-session": {
+                "title": "Starte deine erste Lernsitzung",
+                "description": "Lernsitzungen nutzen verteilte Wiederholung, um dir Karten kurz bevor du sie vergisst zu zeigen. Probiere eine kurze Sitzung mit einem deiner Stapel aus, um zu sehen, wie sie sich an deine Antworten anpasst.",
+                "cta": "Lernen starten"
+            },
+            "build-library": {
+                "title": "Erweitere deine Bibliothek auf 3 Decks",
+                "description": "Eine größere Bibliothek macht deine Lernsitzungen abwechslungsreicher.",
+                "cta": "Decks verwalten"
+            },
+            "sign-in-to-sync": {
+                "title": "Anmelden, um geräteübergreifend zu synchronisieren",
+                "description": "Erstelle ein kostenloses Konto, damit deine Stapel und dein Fortschritt zwischen deinem Handy und der Web-App synchronisiert werden. Du kannst Mnemova auch weiterhin als Gast nutzen — durch die Synchronisierung wird einfach alles gesichert und überall verfügbar gemacht.",
+                "cta": "Anmelden"
+            },
+            "enable-study-reminders": {
+                "title": "Lern-Erinnerungen aktivieren",
+                "description": "Aktiviere Benachrichtigungen und wir erinnern dich, wenn Karten zur Wiederholung fällig sind, damit du deine Serie nicht verlierst.",
+                "cta": "Einstellungen öffnen"
+            },
+            "try-mobile": {
+                "title": "Lerne unterwegs",
+                "description": "Nutze Mnemova auf deinem Handy — deine Decks werden automatisch synchronisiert.",
+                "cta": "App holen"
+            },
+            "closed-testing-feedback": {
+                "title": "Wir befinden uns in der geschlossenen Testphase — sag uns, was unklar ist",
+                "description": "Einen Fehler, einen verwirrenden Bildschirm oder etwas, das sich einfach falsch anfühlt, gefunden? Sende uns dein Feedback, damit wir es vor dem Launch beheben können.",
+                "cta": "Feedback senden"
+            }
         }
     }
 }

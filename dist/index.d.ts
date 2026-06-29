@@ -9,6 +9,7 @@ export type { EditSessionStatus, EditSessionSnapshot, EditSession, OpenEditSessi
 export type { Tier, SubscriptionStatus, UserTierRow } from "./types/tierType";
 export { RC_ENTITLEMENT_ID, TIER_LIMITS, TIER_INFO } from "./types/tierType";
 export type { ExerciseStatus, ExerciseStats, DeckStats } from "./types/statsType";
+export type { TodoId, TodoSnapshot, TodoDefinition } from "./types/todoType";
 export { validateEmail, checkEmailConfirmed, resendConfirmationEmail, } from "./helpers/auth.helper";
 export { getInitialRecord, buildExercisePool, pickFromPool, applyRating, shouldRepeatAgain, shouldRepeatHard, getRepeatInsertPosition, selectNextPool, } from "./helpers/study.helper";
 export { syncDecks, syncStudyData, syncSessionHistory, ensureProfile, updateProfile, buildSyncMessage, } from "./helpers/sync.helper";
@@ -20,5 +21,6 @@ export { deleteAccount } from "./helpers/deleteAccount";
 export { EDIT_SESSION_TTL_MS, generateShortCode, isEditSessionUsable, } from "./helpers/editSession.helper";
 export { getUserTier } from "./helpers/tier.helper";
 export type { UserTierResult } from "./helpers/tier.helper";
+export { TODO_DEFINITIONS, selectActiveTodos } from "./helpers/todo.helper";
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, FALLBACK_LOCALE, RTL_LOCALES, LOCALE_LABELS, isRTL, resolveLocale, resources, createI18n, COMMON_NS, } from "./i18n";
