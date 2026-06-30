@@ -188,6 +188,11 @@
         "synced": "Synced {{time}}",
         "notSynced": "Not synced yet"
     },
+    "connError": {
+        "noConnection": "No internet connection. Check your network and try again.",
+        "connectionInterrupted": "Connection interrupted. Please try again.",
+        "serverError": "The server is unavailable right now. Please try again shortly."
+    },
     "timeAgo": {
         "justNow": "just now",
         "minutes_one": "{{count}}m ago",

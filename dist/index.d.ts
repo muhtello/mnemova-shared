@@ -22,5 +22,7 @@ export { EDIT_SESSION_TTL_MS, generateShortCode, isEditSessionUsable, } from "./
 export { getUserTier } from "./helpers/tier.helper";
 export type { UserTierResult } from "./helpers/tier.helper";
 export { TODO_DEFINITIONS, resolveTodos } from "./helpers/todo.helper";
+export { classifyConnError, connErrorKey } from "./helpers/connError.helper";
+export type { ConnErrorCode } from "./helpers/connError.helper";
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, FALLBACK_LOCALE, RTL_LOCALES, LOCALE_LABELS, isRTL, resolveLocale, resources, createI18n, COMMON_NS, } from "./i18n";

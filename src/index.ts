@@ -66,6 +66,9 @@ export type { UserTierResult } from "./helpers/tier.helper";
 
 export { TODO_DEFINITIONS, resolveTodos } from "./helpers/todo.helper";
 
+export { classifyConnError, connErrorKey } from "./helpers/connError.helper";
+export type { ConnErrorCode } from "./helpers/connError.helper";
+
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";
 export {

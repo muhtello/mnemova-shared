@@ -188,6 +188,11 @@
         "synced": "Synchronisiert {{time}}",
         "notSynced": "Noch nicht synchronisiert"
     },
+    "connError": {
+        "noConnection": "Keine Internetverbindung. Überprüfe dein Netzwerk und versuche es erneut.",
+        "connectionInterrupted": "Verbindung unterbrochen. Bitte versuche es erneut.",
+        "serverError": "Der Server ist derzeit nicht erreichbar. Bitte versuche es in Kürze erneut."
+    },
     "timeAgo": {
         "justNow": "gerade eben",
         "minutes_one": "vor {{count}} Min.",
