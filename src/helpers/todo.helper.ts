@@ -6,6 +6,7 @@ export const TODO_DEFINITIONS: Record<TodoId, TodoDefinition> = {
   "create-first-deck": { id: "create-first-deck", isDone: (s) => s.deckCount > 0 },
   "complete-first-session": { id: "complete-first-session", isDone: (s) => s.hasStudied },
   "sign-in-to-sync": { id: "sign-in-to-sync", isDone: (s) => s.isLoggedIn },
+  "complete-profile": { id: "complete-profile", isDone: (s) => s.profileComplete },
   "enable-study-reminders": { id: "enable-study-reminders", isDone: (s) => s.notificationsEnabled },
   "build-library": { id: "build-library", isDone: (s) => s.deckCount >= 3 },
 };

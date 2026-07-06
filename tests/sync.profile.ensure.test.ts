@@ -37,7 +37,7 @@ function makeClient(opts: Opts) {
 
 const fullRow: Row = {
   first_name: 'Ada', last_name: 'Lovelace', full_name: 'Ada Lovelace',
-  phone: '123', avatar_url: 'a.png', birth_date: '1990-01-01',
+  phone: '123', country: 'United Kingdom', avatar_url: 'a.png', birth_date: '1990-01-01',
   daily_goal_cards: 30, preferred_study_time: 'morning',
 }
 
@@ -62,6 +62,15 @@ describe('ensureProfile', () => {
     expect(profile.isComplete).toBe(false)
     expect(profile.firstName).toBe('')
     expect(profile.dailyGoalCards).toBe(20) // sensible default, not an error signal
+  })
+
+  it('is incomplete when name + phone are set but country is missing', async () => {
+    const noCountry: Row = { ...fullRow, country: null }
+    const client = makeClient({ row: noCountry })
+    const profile = await ensureProfile(client, 'user-1', 'ada@x.com')
+
+    expect(profile.isComplete).toBe(false)
+    expect(profile.country).toBe('')
   })
 
   it('throws on a read failure instead of returning an empty profile', async () => {

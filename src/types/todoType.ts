@@ -11,6 +11,7 @@ export type TodoId =
   | "create-first-deck"
   | "complete-first-session"
   | "sign-in-to-sync"
+  | "complete-profile"
   | "enable-study-reminders"
   | "build-library";
 
@@ -20,6 +21,9 @@ export interface TodoSnapshot {
   deckCount: number;
   hasStudied: boolean;
   isLoggedIn: boolean;
+  // True once the user has filled in their profile (first + last name). Only
+  // meaningful for logged-in users; guests leave it at the default false.
+  profileComplete: boolean;
   notificationsEnabled: boolean;
 }
 

@@ -298,6 +298,11 @@
                 "description": "Erstelle ein kostenloses Konto, damit deine Stapel und dein Fortschritt zwischen deinem Handy und der Web-App synchronisiert werden. Du kannst Mnemova auch weiterhin als Gast nutzen — durch die Synchronisierung wird einfach alles gesichert und überall verfügbar gemacht.",
                 "cta": "Anmelden"
             },
+            "complete-profile": {
+                "title": "Vervollständige dein Profil",
+                "description": "Füge deinen Namen, deine Telefonnummer und dein Land hinzu, damit Mnemova dein Erlebnis personalisieren kann. Es dauert nur einen Moment.",
+                "cta": "Profil vervollständigen"
+            },
             "enable-study-reminders": {
                 "title": "Lern-Erinnerungen aktivieren",
                 "description": "Aktiviere Benachrichtigungen und wir erinnern dich, wenn Karten zur Wiederholung fällig sind, damit du deine Serie nicht verlierst.",

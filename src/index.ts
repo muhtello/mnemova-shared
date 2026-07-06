@@ -70,6 +70,8 @@ export { TODO_DEFINITIONS, resolveTodos } from "./helpers/todo.helper";
 export { classifyConnError, connErrorKey } from "./helpers/connError.helper";
 export type { ConnErrorCode } from "./helpers/connError.helper";
 
+export { COUNTRIES } from "./constants/countries";
+
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";
 export {

@@ -5,6 +5,7 @@ export interface ProfileData {
     lastName: string;
     fullName: string;
     phone: string;
+    country: string;
     avatarUrl: string;
     birthDate: string;
     dailyGoalCards: number;
@@ -14,6 +15,7 @@ export interface ProfileUpdate {
     firstName: string;
     lastName: string;
     phone: string;
+    country: string;
     avatarUrl?: string;
     birthDate?: string;
     dailyGoalCards?: number;

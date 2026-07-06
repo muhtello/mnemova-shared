@@ -298,6 +298,11 @@
                 "description": "Create a free account so your decks and progress sync between your phone and the web app. You can also keep using Mnemova as a guest — syncing just keeps everything backed up and available everywhere.",
                 "cta": "Sign in"
             },
+            "complete-profile": {
+                "title": "Complete your profile",
+                "description": "Add your name, phone number and country so Mnemova can personalize your experience. It only takes a moment.",
+                "cta": "Complete profile"
+            },
             "enable-study-reminders": {
                 "title": "Turn on study reminders",
                 "description": "Enable notifications and we'll remind you when cards are due for review, so you don't lose your streak.",

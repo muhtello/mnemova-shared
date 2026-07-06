@@ -8,6 +8,7 @@ export interface ProfileData {
   lastName: string
   fullName: string
   phone: string
+  country: string
   avatarUrl: string
   birthDate: string
   dailyGoalCards: number
@@ -18,6 +19,7 @@ export interface ProfileUpdate {
   firstName: string
   lastName: string
   phone: string
+  country: string
   avatarUrl?: string
   birthDate?: string
   dailyGoalCards?: number
@@ -33,6 +35,7 @@ interface ProfileRow {
   full_name: string | null
   email: string
   phone: string | null
+  country: string | null
   avatar_url: string | null
   birth_date: string | null
   daily_goal_cards: number | null
@@ -41,7 +44,8 @@ interface ProfileRow {
 
 // ─── ensureProfile ────────────────────────────────────────────────────────────
 // Creates the profile row if missing, then returns the full profile.
-// Profile is considered complete when both first_name and last_name are set.
+// Profile is considered complete when first_name, last_name, phone AND country
+// are all set — the fields we ask every user to fill in.
 
 export async function ensureProfile(
   client: SupabaseClient,
@@ -59,7 +63,7 @@ export async function ensureProfile(
 
   const { data, error } = await client
     .from('profiles')
-    .select('first_name, last_name, full_name, phone, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
+    .select('first_name, last_name, full_name, phone, country, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
     .eq('id', userId)
     .single<ProfileRow>()
 
@@ -74,11 +78,18 @@ export async function ensureProfile(
   const firstName = data.first_name ?? ''
   const lastName = data.last_name ?? ''
   const fullName = [firstName, lastName].filter(Boolean).join(' ') || (data.full_name ?? '')
+  const phone = data.phone ?? ''
+  const country = data.country ?? ''
 
   return {
-    isComplete: firstName.trim().length > 0 && lastName.trim().length > 0,
+    isComplete:
+      firstName.trim().length > 0 &&
+      lastName.trim().length > 0 &&
+      phone.trim().length > 0 &&
+      country.trim().length > 0,
     firstName, lastName, fullName,
-    phone: data.phone ?? '',
+    phone,
+    country,
     avatarUrl: data.avatar_url ?? '',
     birthDate: data.birth_date ?? '',
     dailyGoalCards: data.daily_goal_cards ?? 20,
@@ -109,6 +120,7 @@ export async function updateProfile(
       last_name: data.lastName.trim(),
       full_name: fullName,
       phone: data.phone.trim() || null,
+      country: data.country.trim() || null,
       avatar_url: data.avatarUrl?.trim() || null,
       birth_date: data.birthDate?.trim() || null,
       daily_goal_cards: data.dailyGoalCards ?? 20,

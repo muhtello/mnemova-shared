@@ -35,7 +35,7 @@ function makeClient(opts: Opts) {
   } as unknown as SupabaseClient
 }
 
-const update: ProfileUpdate = { firstName: 'Ada', lastName: 'Lovelace', phone: '123' }
+const update: ProfileUpdate = { firstName: 'Ada', lastName: 'Lovelace', phone: '123', country: 'United Kingdom' }
 
 describe('updateProfile', () => {
   it('returns no error and no warning on full success', async () => {
