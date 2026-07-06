@@ -202,6 +202,10 @@ export async function syncDecks(
   )
   const serverById = new Map(serverDecks.map((d) => [d.id, d]))
   const localById = new Map(localDecks.map((d) => [d.id, d]))
+  // Decks queued for deletion are removed from localDecks but still live on the
+  // server until Phase 5 soft-deletes them. Track them so the pull-back loop
+  // below doesn't resurrect a deck the user just deleted.
+  const pendingDeleteSet = new Set(pendingDeletes)
 
   // ── Phase 3: Merge — last-write-wins on updatedAt ───────────────────────────
 
@@ -250,8 +254,12 @@ export async function syncDecks(
     }
   }
 
-  // Pull decks that exist on server but have never been seen locally
+  // Pull decks that exist on server but have never been seen locally.
+  // Skip decks queued for deletion — they were removed locally on purpose and
+  // are about to be soft-deleted on the server in Phase 5; pulling them back
+  // would resurrect the deck for one sync cycle before it finally disappears.
   for (const server of serverDecks) {
+    if (pendingDeleteSet.has(server.id)) continue
     if (!localById.has(server.id)) { mergedDecks.push(server); pulledCount++ }
   }
 

@@ -169,6 +169,10 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
     const serverDecks = deckRows.map((row) => { var _a, _b; return fromDeckRow(row, (_a = exercisesByDeck.get(row.id)) !== null && _a !== void 0 ? _a : [], (_b = settingsByDeck.get(row.id)) !== null && _b !== void 0 ? _b : { ...settingType_1.DEFAULT_STUDY_SETTINGS }); });
     const serverById = new Map(serverDecks.map((d) => [d.id, d]));
     const localById = new Map(localDecks.map((d) => [d.id, d]));
+    // Decks queued for deletion are removed from localDecks but still live on the
+    // server until Phase 5 soft-deletes them. Track them so the pull-back loop
+    // below doesn't resurrect a deck the user just deleted.
+    const pendingDeleteSet = new Set(pendingDeletes);
     // ── Phase 3: Merge — last-write-wins on updatedAt ───────────────────────────
     const mergedDecks = [];
     const deckUpserts = [];
@@ -216,8 +220,13 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
             // _localStatus === 'synced' with no server record means the deck was deleted remotely — drop it.
         }
     }
-    // Pull decks that exist on server but have never been seen locally
+    // Pull decks that exist on server but have never been seen locally.
+    // Skip decks queued for deletion — they were removed locally on purpose and
+    // are about to be soft-deleted on the server in Phase 5; pulling them back
+    // would resurrect the deck for one sync cycle before it finally disappears.
     for (const server of serverDecks) {
+        if (pendingDeleteSet.has(server.id))
+            continue;
         if (!localById.has(server.id)) {
             mergedDecks.push(server);
             pulledCount++;
