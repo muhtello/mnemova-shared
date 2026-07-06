@@ -46,7 +46,8 @@ export {
 } from "./helpers/study.helper";
 
 export {
-  syncDecks, syncStudyData, syncSessionHistory, ensureProfile, updateProfile, buildSyncMessage,
+  syncDecks, syncStudyData, syncSessionHistory, syncRecordResets,
+  ensureProfile, updateProfile, buildSyncMessage,
 } from "./helpers/sync.helper";
 export type { ProfileData, ProfileUpdate, SyncLog, SyncMessage } from "./helpers/sync.helper";
 

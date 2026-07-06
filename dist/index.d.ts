@@ -12,7 +12,7 @@ export type { ExerciseStatus, ExerciseStats, DeckStats } from "./types/statsType
 export type { TodoId, TodoSnapshot, TodoDefinition } from "./types/todoType";
 export { validateEmail, checkEmailConfirmed, resendConfirmationEmail, } from "./helpers/auth.helper";
 export { getInitialRecord, buildExercisePool, pickFromPool, applyRating, shouldRepeatAgain, shouldRepeatHard, getRepeatInsertPosition, selectNextPool, } from "./helpers/study.helper";
-export { syncDecks, syncStudyData, syncSessionHistory, ensureProfile, updateProfile, buildSyncMessage, } from "./helpers/sync.helper";
+export { syncDecks, syncStudyData, syncSessionHistory, syncRecordResets, ensureProfile, updateProfile, buildSyncMessage, } from "./helpers/sync.helper";
 export type { ProfileData, ProfileUpdate, SyncLog, SyncMessage } from "./helpers/sync.helper";
 export { getExerciseStats, getDeckStats } from "./helpers/stats.helper";
 export type { FieldHelp, ExerciseTypeHelp } from "./helpers/exerciseHelp";
