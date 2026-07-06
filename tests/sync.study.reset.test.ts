@@ -53,7 +53,7 @@ function makeClient(opts: { cardRows?: unknown[]; exerciseIds?: string[] }) {
 // A stale server row carrying old progress (recent last_reviewed) for ex-1.
 function staleServerRow(lastReviewedMs: number) {
   return {
-    id: 'row-1', user_id: 'user-1', guest_session_id: null,
+    id: 'row-1', user_id: 'user-1',
     exercise_id: 'ex-1', interval_days: 7,
     due_date: new Date(lastReviewedMs + 7 * 86_400_000).toISOString(),
     last_reviewed: new Date(lastReviewedMs).toISOString(),

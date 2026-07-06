@@ -36,7 +36,7 @@ describe.skipIf(skip)('Auth cross-user RLS isolation', () => {
     await clientA.from('exercises').upsert(ex, { onConflict: 'id' })
 
     await serviceClient().from('card_records').insert({
-      user_id: userAId, guest_session_id: null, exercise_id: exAId,
+      user_id: userAId, exercise_id: exAId,
       interval_days: 1, due_date: new Date().toISOString(),
       last_reviewed: null, last_rating: null, consecutive_same_rating: 0,
     })

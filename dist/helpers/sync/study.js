@@ -15,7 +15,7 @@ function fromCardRecordRow(row) {
 function toCardRecordFields(record, userId) {
     var _a;
     return {
-        user_id: userId, guest_session_id: null, exercise_id: record.exerciseId,
+        user_id: userId, exercise_id: record.exerciseId,
         // interval_days is `real` in the DB, so sub-day Hard intervals
         // (hardDelayHours/24, e.g. 0.166) persist losslessly — no rounding.
         interval_days: record.intervalDays,

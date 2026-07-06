@@ -3,7 +3,7 @@
  *
  * Guests are local-only: they never persist study data to Supabase (only QR
  * pairing and edit sessions use the network). The `anon` role has NO policies on
- * decks/exercises/card_records/study_settings, so it is fully default-denied.
+ * decks/exercises/study_settings, so it is fully default-denied.
  * These tests pin that guarantee. Data is seeded via the service role (which
  * bypasses RLS) so we can prove anon cannot read or write it.
  *
@@ -24,17 +24,11 @@ describe.skipIf(skip)('Anon/guest DB access — RLS denial', () => {
     await admin.from('decks').insert(deck)
     await admin.from('exercises').insert(exercise)
     await admin.from('study_settings').insert({ deck_id: deck.id, repeat_mode: 'never' })
-    await admin.from('card_records').insert({
-      user_id: null, guest_session_id: ownerId, exercise_id: exercise.id,
-      interval_days: 1, due_date: new Date().toISOString(),
-      last_reviewed: null, last_rating: null, consecutive_same_rating: 0,
-    })
   })
 
   afterAll(async () => {
     const admin = serviceClient()
     await Promise.all([
-      admin.from('card_records').delete().eq('guest_session_id', ownerId),
       admin.from('study_settings').delete().eq('deck_id', deck.id),
       admin.from('exercises').delete().eq('deck_id', deck.id),
     ])
@@ -57,20 +51,6 @@ describe.skipIf(skip)('Anon/guest DB access — RLS denial', () => {
   it('cannot SELECT exercises', async () => {
     const { data } = await guest().from('exercises').select('id').eq('id', exercise.id)
     expect(data).toHaveLength(0)
-  })
-
-  it('cannot SELECT card_records', async () => {
-    const { data } = await guest().from('card_records').select('id').eq('guest_session_id', ownerId)
-    expect(data).toHaveLength(0)
-  })
-
-  it('cannot INSERT card_records', async () => {
-    const { error } = await guest().from('card_records').insert({
-      user_id: null, guest_session_id: ownerId, exercise_id: exercise.id,
-      interval_days: 1, due_date: new Date().toISOString(),
-      last_reviewed: null, last_rating: null, consecutive_same_rating: 0,
-    })
-    expect(error).not.toBeNull()
   })
 
   it('cannot SELECT study_settings', async () => {

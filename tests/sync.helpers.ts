@@ -86,12 +86,9 @@ export async function cleanGuest(guestId: string): Promise<void> {
       admin.from('study_settings').delete().in('deck_id', ids),
     ])
   }
-  await Promise.all([
-    admin.from('decks').delete().eq('owner_id', guestId),
-    admin.from('attempt_logs').delete().eq('guest_session_id', guestId),
-    admin.from('session_logs').delete().eq('guest_session_id', guestId),
-    admin.from('card_records').delete().eq('guest_session_id', guestId),
-  ])
+  // Guests are local-only — they never persist study rows to the DB, so the only
+  // guest data to clean is decks seeded by the RLS tests via the service role.
+  await admin.from('decks').delete().eq('owner_id', guestId)
 }
 
 /** Remove all test data for an auth user and delete the account. */

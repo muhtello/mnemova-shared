@@ -4,7 +4,7 @@ import type { CardRecord } from '../../types/studyType'
 // ─── Row shape ────────────────────────────────────────────────────────────────
 
 interface CardRecordRow {
-  id: string; user_id: string | null; guest_session_id: string | null
+  id: string; user_id: string | null
   exercise_id: string; interval_days: number; due_date: string
   last_reviewed: string | null; last_rating: string | null
   consecutive_same_rating: number
@@ -24,7 +24,7 @@ function fromCardRecordRow(row: CardRecordRow): CardRecord {
 
 function toCardRecordFields(record: CardRecord, userId: string) {
   return {
-    user_id: userId, guest_session_id: null, exercise_id: record.exerciseId,
+    user_id: userId, exercise_id: record.exerciseId,
     // interval_days is `real` in the DB, so sub-day Hard intervals
     // (hardDelayHours/24, e.g. 0.166) persist losslessly — no rounding.
     interval_days: record.intervalDays,

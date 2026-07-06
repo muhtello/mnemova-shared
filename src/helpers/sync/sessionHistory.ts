@@ -27,7 +27,6 @@ function sessionToRow(session: SessionLog, userId: string) {
   return {
     id:               session.id,
     user_id:          userId,
-    guest_session_id: null,
     deck_id:          session.deckId || null,
     stats:            session.stats,
     attempts:         session.attempts,

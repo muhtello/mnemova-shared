@@ -83,7 +83,7 @@ describe.skipIf(!canRun())('card_records RLS — authenticated', () => {
 })
 
 // Guests are local-only: the `anon` role has NO policies on `card_records`, so
-// every anon insert is denied regardless of header or guest_session_id.
+// every anon insert is denied regardless of header.
 describe.skipIf(!canRun())('card_records RLS — anon/guest fully denied', () => {
   let guestId: string
   let exId = ''
@@ -101,7 +101,7 @@ describe.skipIf(!canRun())('card_records RLS — anon/guest fully denied', () =>
 
   it('INSERT: guest client (with header) cannot insert a record', async () => {
     const { error } = await guestClient(guestId).from('card_records').insert({
-      exercise_id: exId, guest_session_id: guestId,
+      exercise_id: exId,
       interval_days: 1, due_date: NOW, last_reviewed: NOW, consecutive_same_rating: 0,
     })
     expect(error).not.toBeNull()
@@ -109,7 +109,7 @@ describe.skipIf(!canRun())('card_records RLS — anon/guest fully denied', () =>
 
   it('INSERT: plain anon client (no header) cannot insert', async () => {
     const { error } = await anonClient().from('card_records').insert({
-      exercise_id: exId, guest_session_id: guestId,
+      exercise_id: exId,
       interval_days: 1, due_date: NOW, last_reviewed: NOW, consecutive_same_rating: 0,
     })
     expect(error).not.toBeNull()
