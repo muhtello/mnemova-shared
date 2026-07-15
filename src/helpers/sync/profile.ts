@@ -9,6 +9,7 @@ export interface ProfileData {
   fullName: string
   phone: string
   country: string
+  postalCode: string
   avatarUrl: string
   birthDate: string
   dailyGoalCards: number
@@ -20,6 +21,7 @@ export interface ProfileUpdate {
   lastName: string
   phone: string
   country: string
+  postalCode?: string
   avatarUrl?: string
   birthDate?: string
   dailyGoalCards?: number
@@ -36,6 +38,7 @@ interface ProfileRow {
   email: string
   phone: string | null
   country: string | null
+  postal_code: string | null
   avatar_url: string | null
   birth_date: string | null
   daily_goal_cards: number | null
@@ -63,7 +66,7 @@ export async function ensureProfile(
 
   const { data, error } = await client
     .from('profiles')
-    .select('first_name, last_name, full_name, phone, country, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
+    .select('first_name, last_name, full_name, phone, country, postal_code, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
     .eq('id', userId)
     .single<ProfileRow>()
 
@@ -80,6 +83,7 @@ export async function ensureProfile(
   const fullName = [firstName, lastName].filter(Boolean).join(' ') || (data.full_name ?? '')
   const phone = data.phone ?? ''
   const country = data.country ?? ''
+  const postalCode = data.postal_code ?? ''
 
   return {
     isComplete:
@@ -90,6 +94,7 @@ export async function ensureProfile(
     firstName, lastName, fullName,
     phone,
     country,
+    postalCode,
     avatarUrl: data.avatar_url ?? '',
     birthDate: data.birth_date ?? '',
     dailyGoalCards: data.daily_goal_cards ?? 20,
@@ -121,6 +126,7 @@ export async function updateProfile(
       full_name: fullName,
       phone: data.phone.trim() || null,
       country: data.country.trim() || null,
+      postal_code: data.postalCode?.trim() || null,
       avatar_url: data.avatarUrl?.trim() || null,
       birth_date: data.birthDate?.trim() || null,
       daily_goal_cards: data.dailyGoalCards ?? 20,
