@@ -1,6 +1,110 @@
 {
   "common": {
     "appName": "Mnemova",
+    "aiGenerate": {
+      "button": {
+        "label": "AI",
+        "title": "Generate exercises from this text with AI"
+      },
+      "dialog": {
+        "title": "Generate exercises with AI",
+        "subtitle": "Exercises are created only from the text you provide."
+      },
+      "page": {
+        "back": "Back to editor"
+      },
+      "hint": {
+        "title": "Tip",
+        "subDocuments": "Tip: the shorter your text, the fewer tokens it uses. Trim parts you don't need below, then press Generate.",
+        "modelTiers": "Draft, Standard, and Premium trade quality for cost:\n\n• Draft: fastest and cheapest — good for a quick first pass you'll likely edit.\n• Standard: balanced quality and cost — the default choice for most decks.\n• Premium: highest quality, most expensive — best for exercises you want right the first time.",
+        "dontShowAgain": "Don't show again",
+        "showAgain": "Show tip"
+      },
+      "sourceDeck": {
+        "label": "Original text (for reference)"
+      },
+      "source": {
+        "label": "Source text",
+        "namePlaceholder": "Name this part (optional)",
+        "tokenEstimate": "~{{n}} tokens",
+        "trim": "Trim",
+        "trimHint": "Collapse extra spaces and blank lines to save tokens",
+        "placeholder": "Paste or edit the text to generate exercises from...",
+        "clear": "Remove text",
+        "clearHint": "Clear this text",
+        "addAll": "Add all text from source",
+        "addAllHint": "Add the full original text here"
+      },
+      "keywords": {
+        "add": "Add keyword",
+        "appendToSubDoc": "Add to text",
+        "removeHint": "Remove this keyword",
+        "listLabel": "Selected keywords ({{n}})",
+        "removeChipHint": "Remove keyword",
+        "totalCount": "{{n}} exercises total",
+        "countHint": "Exercises to generate for this keyword"
+      },
+      "model": {
+        "draft": "Draft",
+        "draftHint": "Fastest and cheapest — good for a quick first pass",
+        "standard": "Standard",
+        "standardHint": "Balanced quality and cost — the default choice",
+        "premium": "Premium",
+        "premiumHint": "Highest quality, most expensive — best for final material"
+      },
+      "types": {
+        "label": "Exercise types",
+        "all": "All"
+      },
+      "controls": {
+        "generate": "Generate",
+        "generating": "Generating…",
+        "needsKeyword": "Mark at least one keyword in the source text before generating",
+        "tooltip": "{{model}} model · {{count}} exercises",
+        "instructions": "Extra guidance (optional)",
+        "instructionsPlaceholder": "e.g. emphasize dates and causes, skip minor details",
+        "includeExplanation": "Include an explanation with each exercise",
+        "includeExplanationWarning": "Explanations aren't checked against your text — they may add information from outside it, or be wrong."
+      },
+      "summary": {
+        "title": "Session usage",
+        "runs": "{{n}} runs",
+        "tokens": "{{n}} tokens",
+        "estimateNote": "Real usage, reported by Anthropic for each generation."
+      },
+      "credits": {
+        "loading": "Checking AI credits…",
+        "remaining": "{{n}} AI credits left",
+        "buy": "Buy",
+        "lifetimeTokens": "{{n}} tokens used all-time",
+        "quantityLabel": "Credits to buy",
+        "priceLabel": "${{price}}",
+        "minNote": "Minimum purchase is {{n}} credits",
+        "infoLink": "What's a credit?"
+      },
+      "creditsInfo": {
+        "back": "Back to AI Generate",
+        "title": "AI credits, explained",
+        "subtitle": "What a credit costs and what it buys you",
+        "pricingTitle": "Pricing",
+        "pricingBody": "Each credit costs ${{price}}. Enter how many you want at checkout — the total scales with the amount.",
+        "minBody": "Minimum purchase is ${{min}} ({{credits}} credits) — this covers Stripe's own per-transaction processing cost, so smaller purchases aren't worth the fee.",
+        "usageTitle": "How credits are spent",
+        "usageBody": "One AI generation (turning your source text into exercises) costs 1 credit, no matter how many exercises you request in that generation.",
+        "tierBody": "The draft/standard/premium quality picker changes which AI model writes your exercises, not the credit cost — all three tiers cost the same 1 credit per generation.",
+        "taxTitle": "Tax",
+        "taxBody": "Sales tax or VAT (e.g. German VAT) is calculated automatically at checkout based on your billing address and added on top of the credit price shown here."
+      },
+      "review": {
+        "title": "Review {{n}} generated exercises",
+        "selectAll": "Select all",
+        "discardAll": "Discard all",
+        "add": "Add {{n}} to deck",
+        "addedToast": "{{n}} exercises added",
+        "addedToastDesc": "Not saved yet — click Save in the editor to keep them.",
+        "discardedToast": "Discarded {{n}} generated exercises"
+      }
+    },
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",

@@ -35,6 +35,10 @@ export type { ExerciseStatus, ExerciseStats, DeckStats } from "./types/statsType
 
 export type { TodoId, TodoSnapshot, TodoDefinition } from "./types/todoType";
 
+export type {
+  AiModelTier, AiKeyword, SubDocument, AiTokenUsage, AiSessionCostEntry,
+} from "./types/aiGenerateType";
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export {
   validateEmail, checkEmailConfirmed, resendConfirmationEmail,
@@ -69,6 +73,11 @@ export { TODO_DEFINITIONS, resolveTodos } from "./helpers/todo.helper";
 
 export { classifyConnError, connErrorKey } from "./helpers/connError.helper";
 export type { ConnErrorCode } from "./helpers/connError.helper";
+
+export {
+  estimateTokens, estimateCostUsd, formatUsd, makeId, trimSourceText, buildKeywordSegments, previewFor,
+} from "./helpers/aiGenerate.helper";
+export type { KeywordSegment } from "./helpers/aiGenerate.helper";
 
 export { COUNTRIES } from "./constants/countries";
 
