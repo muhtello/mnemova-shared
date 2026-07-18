@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { DEFAULT_STUDY_SETTINGS } from '../../types/settingType'
-import type { Deck } from '../../types/deckType'
+import type { Deck, TextFormatSpan } from '../../types/deckType'
 import type { Exercise } from '../../types/exerciseType'
 import type { StudySettings, RepeatMode } from '../../types/settingType'
 
@@ -8,6 +8,7 @@ import type { StudySettings, RepeatMode } from '../../types/settingType'
 
 interface DeckRow {
   id: string; owner_id: string; title: string; content: string | null
+  content_formatting: unknown | null
   created_at: string; updated_at: string; deleted_at: string | null
 }
 
@@ -125,6 +126,7 @@ function toStudySettingsRow(deckId: string, settings: StudySettings) {
 function fromDeckRow(row: DeckRow, exercises: Exercise[], settings: StudySettings): Deck {
   return {
     id: row.id, title: row.title, content: row.content ?? undefined, exercises,
+    formatting: (row.content_formatting as TextFormatSpan[] | null) ?? undefined,
     createdAt: new Date(row.created_at), updatedAt: new Date(row.updated_at),
     studySettings: settings, _localStatus: 'synced',
   }
@@ -225,7 +227,7 @@ export async function syncDecks(
       // Push if local has unsaved changes and is at least as recent as server
       const localIsNewer = local._localStatus !== 'synced' && localTime >= serverTime
       if (localIsNewer) {
-        deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
+        deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, content_formatting: local.formatting ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
         // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
         const exercises = local.exercises ?? []
         exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)))
@@ -241,7 +243,7 @@ export async function syncDecks(
     } else {
       // No server record yet — push if deck was ever created/modified locally
       if (local._localStatus !== 'synced') {
-        deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
+        deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, content_formatting: local.formatting ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
         // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
         const exercises = local.exercises ?? []
         exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)))

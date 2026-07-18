@@ -101,9 +101,10 @@ function toStudySettingsRow(deckId, settings) {
     };
 }
 function fromDeckRow(row, exercises, settings) {
-    var _a;
+    var _a, _b;
     return {
         id: row.id, title: row.title, content: (_a = row.content) !== null && _a !== void 0 ? _a : undefined, exercises,
+        formatting: (_b = row.content_formatting) !== null && _b !== void 0 ? _b : undefined,
         createdAt: new Date(row.created_at), updatedAt: new Date(row.updated_at),
         studySettings: settings, _localStatus: 'synced',
     };
@@ -139,7 +140,7 @@ function isValidUUID(id) {
 // devices don't receive ghost exercises.
 async function syncDecks(client, localDecks, pendingDeletes, userId) {
     // ── Phase 1: Fetch server state ─────────────────────────────────────────────
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     const { data: deckRows, error: deckError } = await client
         .from('decks').select('*').eq('owner_id', userId).is('deleted_at', null);
     if (deckError)
@@ -189,11 +190,11 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
             // Push if local has unsaved changes and is at least as recent as server
             const localIsNewer = local._localStatus !== 'synced' && localTime >= serverTime;
             if (localIsNewer) {
-                deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: (_c = local.content) !== null && _c !== void 0 ? _c : null, created_at: toISO(local.createdAt), updated_at: toISO((_d = local.updatedAt) !== null && _d !== void 0 ? _d : local.createdAt), deleted_at: null });
+                deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: (_c = local.content) !== null && _c !== void 0 ? _c : null, content_formatting: (_d = local.formatting) !== null && _d !== void 0 ? _d : null, created_at: toISO(local.createdAt), updated_at: toISO((_e = local.updatedAt) !== null && _e !== void 0 ? _e : local.createdAt), deleted_at: null });
                 // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
-                const exercises = (_e = local.exercises) !== null && _e !== void 0 ? _e : [];
+                const exercises = (_f = local.exercises) !== null && _f !== void 0 ? _f : [];
                 exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)));
-                const settings = (_f = local.studySettings) !== null && _f !== void 0 ? _f : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
+                const settings = (_g = local.studySettings) !== null && _g !== void 0 ? _g : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
                 settingUpserts.push(toStudySettingsRow(local.id, settings));
                 mergedDecks.push({ ...local, exercises, studySettings: settings, _localStatus: 'synced' });
                 pushedCount++;
@@ -208,11 +209,11 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
         else {
             // No server record yet — push if deck was ever created/modified locally
             if (local._localStatus !== 'synced') {
-                deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: (_g = local.content) !== null && _g !== void 0 ? _g : null, created_at: toISO(local.createdAt), updated_at: toISO((_h = local.updatedAt) !== null && _h !== void 0 ? _h : local.createdAt), deleted_at: null });
+                deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: (_h = local.content) !== null && _h !== void 0 ? _h : null, content_formatting: (_j = local.formatting) !== null && _j !== void 0 ? _j : null, created_at: toISO(local.createdAt), updated_at: toISO((_k = local.updatedAt) !== null && _k !== void 0 ? _k : local.createdAt), deleted_at: null });
                 // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
-                const exercises = (_j = local.exercises) !== null && _j !== void 0 ? _j : [];
+                const exercises = (_l = local.exercises) !== null && _l !== void 0 ? _l : [];
                 exUpserts.push(...exercises.map((e) => toExerciseRow(local.id, e)));
-                const settings = (_k = local.studySettings) !== null && _k !== void 0 ? _k : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
+                const settings = (_m = local.studySettings) !== null && _m !== void 0 ? _m : { ...settingType_1.DEFAULT_STUDY_SETTINGS };
                 settingUpserts.push(toStudySettingsRow(local.id, settings));
                 mergedDecks.push({ ...local, exercises, studySettings: settings, _localStatus: 'synced' });
                 pushedCount++;
@@ -297,7 +298,7 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
                 // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
                 client.from('study_settings').delete().in('deck_id', ownedDeckIds),
             ]);
-            const deleteError = (_l = deleteResults.find((r) => r.error)) === null || _l === void 0 ? void 0 : _l.error;
+            const deleteError = (_o = deleteResults.find((r) => r.error)) === null || _o === void 0 ? void 0 : _o.error;
             if (deleteError)
                 return { mergedDecks: localDecks, error: deleteError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
         }
