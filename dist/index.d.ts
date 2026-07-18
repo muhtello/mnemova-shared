@@ -3,7 +3,7 @@ export { getDraftFields, EXERCISE_META } from "./types/exerciseType";
 export type { RepeatMode, RepeatStrategy, StudySettings } from "./types/settingType";
 export { DEFAULT_STUDY_SETTINGS } from "./types/settingType";
 export type { CardRating, CardRecord, QueueItem, SessionStats, AttemptLog, RecordReset, SessionLog, } from "./types/studyType";
-export type { Deck } from "./types/deckType";
+export type { Deck, TextFormatSpan, FormatKind } from "./types/deckType";
 export { createDeck } from "./types/deckType";
 export type { EditSessionStatus, EditSessionSnapshot, EditSession, OpenEditSessionInput, OpenEditSessionResult, ClaimEditInput, ClaimEditResult, SaveEditInput, } from "./types/editSessionType";
 export type { Tier, SubscriptionStatus, UserTierRow } from "./types/tierType";
