@@ -36,7 +36,7 @@ function makeClient(opts: Opts) {
 }
 
 const fullRow: Row = {
-  first_name: 'Ada', last_name: 'Lovelace', full_name: 'Ada Lovelace',
+  first_name: 'Ada', last_name: 'Lovelace',
   phone: '123', country: 'United Kingdom', avatar_url: 'a.png', birth_date: '1990-01-01',
   daily_goal_cards: 30, preferred_study_time: 'morning',
 }
@@ -53,7 +53,7 @@ describe('ensureProfile', () => {
 
   it('returns an incomplete (not empty) profile for a new user with null name fields', async () => {
     const newRow: Row = {
-      first_name: null, last_name: null, full_name: null, phone: null,
+      first_name: null, last_name: null, phone: null,
       avatar_url: null, birth_date: null, daily_goal_cards: null, preferred_study_time: null,
     }
     const client = makeClient({ row: newRow })

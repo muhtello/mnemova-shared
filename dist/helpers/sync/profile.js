@@ -7,7 +7,7 @@ exports.updateProfile = updateProfile;
 // Profile is considered complete when first_name, last_name, phone AND country
 // are all set — the fields we ask every user to fill in.
 async function ensureProfile(client, userId, email) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     // Create the row if missing. A failed create must not be swallowed — otherwise
     // the read below surfaces as a misleading "empty/incomplete" profile.
     const { error: upsertError } = await client
@@ -18,7 +18,7 @@ async function ensureProfile(client, userId, email) {
     }
     const { data, error } = await client
         .from('profiles')
-        .select('first_name, last_name, full_name, phone, country, postal_code, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
+        .select('first_name, last_name, phone, country, postal_code, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
         .eq('id', userId)
         .single();
     // The row exists (just upserted), so an error/missing here is a real read
@@ -30,10 +30,10 @@ async function ensureProfile(client, userId, email) {
     }
     const firstName = (_b = data.first_name) !== null && _b !== void 0 ? _b : '';
     const lastName = (_c = data.last_name) !== null && _c !== void 0 ? _c : '';
-    const fullName = [firstName, lastName].filter(Boolean).join(' ') || ((_d = data.full_name) !== null && _d !== void 0 ? _d : '');
-    const phone = (_e = data.phone) !== null && _e !== void 0 ? _e : '';
-    const country = (_f = data.country) !== null && _f !== void 0 ? _f : '';
-    const postalCode = (_g = data.postal_code) !== null && _g !== void 0 ? _g : '';
+    const fullName = [firstName, lastName].filter(Boolean).join(' ');
+    const phone = (_d = data.phone) !== null && _d !== void 0 ? _d : '';
+    const country = (_e = data.country) !== null && _e !== void 0 ? _e : '';
+    const postalCode = (_f = data.postal_code) !== null && _f !== void 0 ? _f : '';
     return {
         isComplete: firstName.trim().length > 0 &&
             lastName.trim().length > 0 &&
@@ -43,10 +43,10 @@ async function ensureProfile(client, userId, email) {
         phone,
         country,
         postalCode,
-        avatarUrl: (_h = data.avatar_url) !== null && _h !== void 0 ? _h : '',
-        birthDate: (_j = data.birth_date) !== null && _j !== void 0 ? _j : '',
-        dailyGoalCards: (_k = data.daily_goal_cards) !== null && _k !== void 0 ? _k : 20,
-        preferredStudyTime: (_l = data.preferred_study_time) !== null && _l !== void 0 ? _l : 'flexible',
+        avatarUrl: (_g = data.avatar_url) !== null && _g !== void 0 ? _g : '',
+        birthDate: (_h = data.birth_date) !== null && _h !== void 0 ? _h : '',
+        dailyGoalCards: (_j = data.daily_goal_cards) !== null && _j !== void 0 ? _j : 20,
+        preferredStudyTime: (_k = data.preferred_study_time) !== null && _k !== void 0 ? _k : 'flexible',
     };
 }
 // ─── updateProfile ────────────────────────────────────────────────────────────
@@ -65,7 +65,6 @@ async function updateProfile(client, userId, data) {
         .update({
         first_name: data.firstName.trim(),
         last_name: data.lastName.trim(),
-        full_name: fullName,
         phone: data.phone.trim() || null,
         country: data.country.trim() || null,
         postal_code: ((_a = data.postalCode) === null || _a === void 0 ? void 0 : _a.trim()) || null,

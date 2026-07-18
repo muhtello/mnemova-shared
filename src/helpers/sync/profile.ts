@@ -34,7 +34,6 @@ interface ProfileRow {
   id: string
   first_name: string | null
   last_name: string | null
-  full_name: string | null
   email: string
   phone: string | null
   country: string | null
@@ -66,7 +65,7 @@ export async function ensureProfile(
 
   const { data, error } = await client
     .from('profiles')
-    .select('first_name, last_name, full_name, phone, country, postal_code, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
+    .select('first_name, last_name, phone, country, postal_code, avatar_url, birth_date, daily_goal_cards, preferred_study_time')
     .eq('id', userId)
     .single<ProfileRow>()
 
@@ -80,7 +79,7 @@ export async function ensureProfile(
 
   const firstName = data.first_name ?? ''
   const lastName = data.last_name ?? ''
-  const fullName = [firstName, lastName].filter(Boolean).join(' ') || (data.full_name ?? '')
+  const fullName = [firstName, lastName].filter(Boolean).join(' ')
   const phone = data.phone ?? ''
   const country = data.country ?? ''
   const postalCode = data.postal_code ?? ''
@@ -123,7 +122,6 @@ export async function updateProfile(
     .update({
       first_name: data.firstName.trim(),
       last_name: data.lastName.trim(),
-      full_name: fullName,
       phone: data.phone.trim() || null,
       country: data.country.trim() || null,
       postal_code: data.postalCode?.trim() || null,
