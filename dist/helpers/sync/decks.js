@@ -132,6 +132,20 @@ function msToISO(ms) {
 function isValidUUID(id) {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 }
+// Deleting a deck/exercise only ever soft-deletes it (deleted_at), so the DB's
+// ON DELETE CASCADE on card_records/attempt_logs never fires — without this,
+// study history for deleted content would leak forever. Mirrors the wipe done
+// by "Reset progress" (recordResets.ts) so the two paths can't drift.
+async function wipeStudyData(client, exerciseIds, userId) {
+    var _a, _b, _c, _d;
+    if (exerciseIds.length === 0)
+        return { error: null };
+    const [cardResult, attemptResult] = await Promise.all([
+        client.from('card_records').delete().in('exercise_id', exerciseIds).eq('user_id', userId),
+        client.from('attempt_logs').delete().in('exercise_id', exerciseIds).eq('user_id', userId),
+    ]);
+    return { error: (_d = (_b = (_a = cardResult.error) === null || _a === void 0 ? void 0 : _a.message) !== null && _b !== void 0 ? _b : (_c = attemptResult.error) === null || _c === void 0 ? void 0 : _c.message) !== null && _d !== void 0 ? _d : null };
+}
 // ─── syncDecks ────────────────────────────────────────────────────────────────
 // Strategy: last-write-wins on updatedAt.
 // A local deck flagged as 'created'/'updated' is pushed if it's at least as
@@ -272,6 +286,9 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
         const { error } = await client.from('exercises').update({ deleted_at: new Date().toISOString() }).in('id', orphanedExIds);
         if (error)
             return { mergedDecks: localDecks, error: error.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
+        const { error: wipeError } = await wipeStudyData(client, orphanedExIds, userId);
+        if (wipeError)
+            return { mergedDecks: localDecks, error: wipeError, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
     }
     if (settingUpserts.length > 0) {
         const { error } = await client.from('study_settings').upsert(settingUpserts, { onConflict: 'deck_id' });
@@ -288,6 +305,9 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
         const ownedDeckIds = (ownedRows !== null && ownedRows !== void 0 ? ownedRows : []).map((r) => r.id);
         if (ownedDeckIds.length > 0) {
             const now = new Date().toISOString();
+            // Exercise ids for these decks, gathered from Phase 1's server fetch (the decks
+            // still had deleted_at null at that point, so their exercises were included).
+            const deletedDeckExerciseIds = ownedDeckIds.flatMap((id) => { var _a; return ((_a = exercisesByDeck.get(id)) !== null && _a !== void 0 ? _a : []).map((e) => e.id); });
             // The Supabase client resolves with { error } instead of throwing, so a failed
             // delete would slip past Promise.all silently and the caller would report a
             // successful sync while the deck stays live on the server (and gets pulled back
@@ -297,10 +317,14 @@ async function syncDecks(client, localDecks, pendingDeletes, userId) {
                 client.from('decks').update({ deleted_at: now }).in('id', ownedDeckIds),
                 // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
                 client.from('study_settings').delete().in('deck_id', ownedDeckIds),
+                client.from('session_logs').delete().in('deck_id', ownedDeckIds).eq('user_id', userId),
             ]);
             const deleteError = (_o = deleteResults.find((r) => r.error)) === null || _o === void 0 ? void 0 : _o.error;
             if (deleteError)
                 return { mergedDecks: localDecks, error: deleteError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
+            const { error: wipeError } = await wipeStudyData(client, deletedDeckExerciseIds, userId);
+            if (wipeError)
+                return { mergedDecks: localDecks, error: wipeError, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 };
         }
     }
     const exercisesPushed = exUpserts.length;
