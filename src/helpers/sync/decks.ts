@@ -210,6 +210,22 @@ export async function syncDecks(
   // below doesn't resurrect a deck the user just deleted.
   const pendingDeleteSet = new Set(pendingDeletes)
 
+  // A deck deleted by another device (soft-deleted, so absent from serverById
+  // above) is otherwise indistinguishable from one that never existed — the
+  // "no server record" push branch below would recreate it. Fetch tombstones
+  // for exactly the local decks missing an active server counterpart so that
+  // branch can tell the two cases apart.
+  const missingIds = localDecks
+    .filter((d) => isValidUUID(d.id) && !serverById.has(d.id))
+    .map((d) => d.id)
+  const tombstones = new Map<string, number>()
+  if (missingIds.length > 0) {
+    const { data: deletedRows, error: tombstoneError } = await client
+      .from('decks').select('id, deleted_at').eq('owner_id', userId).in('id', missingIds)
+    if (tombstoneError) return { mergedDecks: localDecks, error: tombstoneError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 }
+    ;(deletedRows as { id: string; deleted_at: string | null }[]).forEach((r) => { if (r.deleted_at) tombstones.set(r.id, new Date(r.deleted_at).getTime()) })
+  }
+
   // ── Phase 3: Merge — last-write-wins on updatedAt ───────────────────────────
 
   const mergedDecks: Deck[] = []
@@ -242,7 +258,16 @@ export async function syncDecks(
         mergedDecks.push(server)
       }
     } else {
-      // No server record yet — push if deck was ever created/modified locally
+      // No server record — either genuinely new, or deleted by another device.
+      const tombstoneTime = tombstones.get(local.id)
+      if (tombstoneTime !== undefined && tombstoneTime >= localTime) {
+        // Deleted remotely at/after this device's last known edit — honor the
+        // delete instead of resurrecting it. (tombstoneTime < localTime falls
+        // through to the push below: this device edited it after the delete,
+        // so recreating it is the intended last-write-wins outcome.)
+        continue
+      }
+      // Push if deck was ever created/modified locally
       if (local._localStatus !== 'synced') {
         deckUpserts.push({ id: local.id, owner_id: userId, title: local.title, content: local.content ?? null, content_formatting: local.formatting ?? null, created_at: toISO(local.createdAt), updated_at: toISO(local.updatedAt ?? local.createdAt), deleted_at: null })
         // Guard: old persisted decks may lack exercises/studySettings (fields added later in schema)
