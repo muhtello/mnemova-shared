@@ -347,6 +347,10 @@ export async function syncDecks(
         // BUG FIX: study_settings rows were previously not cleaned up — delete them to avoid orphans
         client.from('study_settings').delete().in('deck_id', ownedDeckIds),
         client.from('session_logs').delete().in('deck_id', ownedDeckIds).eq('user_id', userId),
+        // BUG FIX: ai_generation_logs.deck_id has an ON DELETE SET NULL FK, but soft-delete
+        // never triggers it — null it out explicitly so history rows don't keep pointing at
+        // a deleted deck forever.
+        client.from('ai_generation_logs').update({ deck_id: null }).in('deck_id', ownedDeckIds),
       ])
       const deleteError = deleteResults.find((r) => r.error)?.error
       if (deleteError) return { mergedDecks: localDecks, error: deleteError.message, pushedCount: 0, pulledCount: 0, conflictCount: 0, exercisesPushed: 0, exercisesPulled: 0 }
