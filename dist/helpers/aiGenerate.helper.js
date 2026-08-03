@@ -7,22 +7,17 @@ exports.makeId = makeId;
 exports.trimSourceText = trimSourceText;
 exports.buildKeywordSegments = buildKeywordSegments;
 exports.previewFor = previewFor;
-// --- Pricing (USD per 1M tokens) ------------------------------------------
-// Client-side ESTIMATE only, for UX hints and the session summary. Authoritative
-// cost is computed server-side from Anthropic's `usage` response. Keep in sync
-// with the server pricing table when the AI layer is wired.
-const PRICING = {
-    draft: { input: 1, output: 5 }, // Haiku 4.5
-    standard: { input: 3, output: 15 }, // Sonnet 5
-    premium: { input: 5, output: 25 }, // Opus 4.8
-};
+const aiPricing_config_1 = require("../config/aiPricing.config");
 // Rough heuristic: ~4 characters per token. Good enough for pre-call estimates;
 // never used for billing.
 function estimateTokens(text) {
     return Math.ceil(text.trim().length / 4);
 }
+// Client-side ESTIMATE only, for UX hints and the session summary.
+// Authoritative cost is always computed server-side from Anthropic's real
+// `usage` response (see mnemova-web/app/lib/ai/models.ts computeCostUsd).
 function estimateCostUsd(usage, model) {
-    const rate = PRICING[model];
+    const rate = aiPricing_config_1.MODEL_PRICING_PER_MILLION[model];
     return ((usage.inputTokens / 1000000) * rate.input +
         (usage.outputTokens / 1000000) * rate.output);
 }
