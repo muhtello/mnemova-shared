@@ -64,20 +64,33 @@ export const PRICE_PER_CREDIT_HUNDREDTH_CENTS = 10; // = $0.001 / credit
 
 export const MIN_PURCHASE_CENTS = 500; // $5 minimum purchase (business rule)
 
+// Stripe Checkout (mode: 'payment') rejects fractional-cent unit prices
+// outright — even via unit_amount_decimal, "more than 2 decimal places" in a
+// line item is a hard error. A single credit is sub-cent, so it can never be
+// its own Stripe line item; credits must be sold in blocks priced at a whole
+// number of cents. This is that block size — Stripe quantity = credits /
+// CREDITS_PER_PURCHASE_UNIT, unit price = amountCentsForCredits(this) cents.
+// Must stay large enough that amountCentsForCredits(this) rounds to at least
+// 1 cent; raise it if PRICE_PER_CREDIT_HUNDREDTH_CENTS is ever lowered enough
+// that 100 credits would round to 0 cents.
+export const CREDITS_PER_PURCHASE_UNIT = 100;
+
 export function amountCentsForCredits(credits: number): number {
   return Math.round((credits * PRICE_PER_CREDIT_HUNDREDTH_CENTS) / 100);
 }
 
 // Smallest credit count whose amountCentsForCredits() actually clears
-// MIN_PURCHASE_CENTS. amountCentsForCredits() rounds to the nearest cent, so
-// the true boundary can sit a little below the analytic estimate (rounding
-// UP can make a slightly smaller credit count already clear the minimum) —
-// start a safe margin below that estimate and walk up to the real boundary
-// against the actual charging function, not just the formula.
+// MIN_PURCHASE_CENTS, rounded to a whole number of purchase units (Stripe
+// can only sell in CREDITS_PER_PURCHASE_UNIT blocks — see above).
+// amountCentsForCredits() rounds to the nearest cent, so the true boundary
+// can sit a little below the analytic estimate — start a safe margin below
+// it and walk up in whole-unit steps to the real boundary against the
+// actual charging function, not just the formula.
 export function minCreditsForMinPurchase(): number {
   const estimate = Math.ceil((MIN_PURCHASE_CENTS * 100) / PRICE_PER_CREDIT_HUNDREDTH_CENTS);
-  let credits = Math.max(0, estimate - 10);
-  while (amountCentsForCredits(credits) < MIN_PURCHASE_CENTS) credits += 1;
+  const safeFloor = Math.floor(estimate / CREDITS_PER_PURCHASE_UNIT) * CREDITS_PER_PURCHASE_UNIT;
+  let credits = Math.max(CREDITS_PER_PURCHASE_UNIT, safeFloor - 10 * CREDITS_PER_PURCHASE_UNIT);
+  while (amountCentsForCredits(credits) < MIN_PURCHASE_CENTS) credits += CREDITS_PER_PURCHASE_UNIT;
   return credits;
 }
 

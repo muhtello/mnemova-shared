@@ -27,7 +27,7 @@ export { classifyConnError, connErrorKey } from "./helpers/connError.helper";
 export type { ConnErrorCode } from "./helpers/connError.helper";
 export { estimateTokens, estimateCostUsd, formatUsd, makeId, trimSourceText, buildKeywordSegments, previewFor, } from "./helpers/aiGenerate.helper";
 export type { KeywordSegment } from "./helpers/aiGenerate.helper";
-export { MODEL_PRICING_PER_MILLION, OUTPUT_TOKEN_WEIGHT, computeWeightedTokens, BASE_TOKENS_PER_CREDIT_DRAFT, tokensPerCredit, creditsForUsage, PRICE_PER_CREDIT_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, amountCentsForCredits, minCreditsForMinPurchase, pricePerHundredCreditsUsd, STARTER_GRANT_CREDITS, OUTPUT_TOKENS_PER_TYPE, estimateInputTokens, estimateCreditsRange, } from "./config/aiPricing.config";
+export { MODEL_PRICING_PER_MILLION, OUTPUT_TOKEN_WEIGHT, computeWeightedTokens, BASE_TOKENS_PER_CREDIT_DRAFT, tokensPerCredit, creditsForUsage, PRICE_PER_CREDIT_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, CREDITS_PER_PURCHASE_UNIT, amountCentsForCredits, minCreditsForMinPurchase, pricePerHundredCreditsUsd, STARTER_GRANT_CREDITS, OUTPUT_TOKENS_PER_TYPE, estimateInputTokens, estimateCreditsRange, } from "./config/aiPricing.config";
 export type { CreditEstimateRange } from "./config/aiPricing.config";
 export { COUNTRIES } from "./constants/countries";
 export type { Locale, TranslationBundle, CreateI18nOptions, AppResources } from "./i18n";

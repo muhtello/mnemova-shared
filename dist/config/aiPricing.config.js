@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OUTPUT_TOKENS_PER_TYPE = exports.STARTER_GRANT_CREDITS = exports.MIN_PURCHASE_CENTS = exports.PRICE_PER_CREDIT_HUNDREDTH_CENTS = exports.BASE_TOKENS_PER_CREDIT_DRAFT = exports.OUTPUT_TOKEN_WEIGHT = exports.MODEL_PRICING_PER_MILLION = void 0;
+exports.OUTPUT_TOKENS_PER_TYPE = exports.STARTER_GRANT_CREDITS = exports.CREDITS_PER_PURCHASE_UNIT = exports.MIN_PURCHASE_CENTS = exports.PRICE_PER_CREDIT_HUNDREDTH_CENTS = exports.BASE_TOKENS_PER_CREDIT_DRAFT = exports.OUTPUT_TOKEN_WEIGHT = exports.MODEL_PRICING_PER_MILLION = void 0;
 exports.computeWeightedTokens = computeWeightedTokens;
 exports.tokensPerCredit = tokensPerCredit;
 exports.creditsForUsage = creditsForUsage;
@@ -52,20 +52,32 @@ function creditsForUsage(tier, inputTokens, outputTokens) {
 // see a de-facto repricing. Raise/lower to change margin.
 exports.PRICE_PER_CREDIT_HUNDREDTH_CENTS = 10; // = $0.001 / credit
 exports.MIN_PURCHASE_CENTS = 500; // $5 minimum purchase (business rule)
+// Stripe Checkout (mode: 'payment') rejects fractional-cent unit prices
+// outright — even via unit_amount_decimal, "more than 2 decimal places" in a
+// line item is a hard error. A single credit is sub-cent, so it can never be
+// its own Stripe line item; credits must be sold in blocks priced at a whole
+// number of cents. This is that block size — Stripe quantity = credits /
+// CREDITS_PER_PURCHASE_UNIT, unit price = amountCentsForCredits(this) cents.
+// Must stay large enough that amountCentsForCredits(this) rounds to at least
+// 1 cent; raise it if PRICE_PER_CREDIT_HUNDREDTH_CENTS is ever lowered enough
+// that 100 credits would round to 0 cents.
+exports.CREDITS_PER_PURCHASE_UNIT = 100;
 function amountCentsForCredits(credits) {
     return Math.round((credits * exports.PRICE_PER_CREDIT_HUNDREDTH_CENTS) / 100);
 }
 // Smallest credit count whose amountCentsForCredits() actually clears
-// MIN_PURCHASE_CENTS. amountCentsForCredits() rounds to the nearest cent, so
-// the true boundary can sit a little below the analytic estimate (rounding
-// UP can make a slightly smaller credit count already clear the minimum) —
-// start a safe margin below that estimate and walk up to the real boundary
-// against the actual charging function, not just the formula.
+// MIN_PURCHASE_CENTS, rounded to a whole number of purchase units (Stripe
+// can only sell in CREDITS_PER_PURCHASE_UNIT blocks — see above).
+// amountCentsForCredits() rounds to the nearest cent, so the true boundary
+// can sit a little below the analytic estimate — start a safe margin below
+// it and walk up in whole-unit steps to the real boundary against the
+// actual charging function, not just the formula.
 function minCreditsForMinPurchase() {
     const estimate = Math.ceil((exports.MIN_PURCHASE_CENTS * 100) / exports.PRICE_PER_CREDIT_HUNDREDTH_CENTS);
-    let credits = Math.max(0, estimate - 10);
+    const safeFloor = Math.floor(estimate / exports.CREDITS_PER_PURCHASE_UNIT) * exports.CREDITS_PER_PURCHASE_UNIT;
+    let credits = Math.max(exports.CREDITS_PER_PURCHASE_UNIT, safeFloor - 10 * exports.CREDITS_PER_PURCHASE_UNIT);
     while (amountCentsForCredits(credits) < exports.MIN_PURCHASE_CENTS)
-        credits += 1;
+        credits += exports.CREDITS_PER_PURCHASE_UNIT;
     return credits;
 }
 // A single credit is now sub-cent, so "$/credit" reads as "$0.00" in the UI.

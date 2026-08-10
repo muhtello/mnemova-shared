@@ -11,6 +11,7 @@ export declare function tokensPerCredit(tier: AiModelTier): number;
 export declare function creditsForUsage(tier: AiModelTier, inputTokens: number, outputTokens: number): number;
 export declare const PRICE_PER_CREDIT_HUNDREDTH_CENTS = 10;
 export declare const MIN_PURCHASE_CENTS = 500;
+export declare const CREDITS_PER_PURCHASE_UNIT = 100;
 export declare function amountCentsForCredits(credits: number): number;
 export declare function minCreditsForMinPurchase(): number;
 export declare function pricePerHundredCreditsUsd(): number;

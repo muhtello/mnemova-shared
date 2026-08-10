@@ -82,7 +82,7 @@ export type { KeywordSegment } from "./helpers/aiGenerate.helper";
 export {
   MODEL_PRICING_PER_MILLION, OUTPUT_TOKEN_WEIGHT, computeWeightedTokens,
   BASE_TOKENS_PER_CREDIT_DRAFT, tokensPerCredit, creditsForUsage,
-  PRICE_PER_CREDIT_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, amountCentsForCredits,
+  PRICE_PER_CREDIT_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, CREDITS_PER_PURCHASE_UNIT, amountCentsForCredits,
   minCreditsForMinPurchase, pricePerHundredCreditsUsd, STARTER_GRANT_CREDITS,
   OUTPUT_TOKENS_PER_TYPE, estimateInputTokens, estimateCreditsRange,
 } from "./config/aiPricing.config";
