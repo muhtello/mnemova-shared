@@ -81,12 +81,12 @@ export type { KeywordSegment } from "./helpers/aiGenerate.helper";
 
 export {
   MODEL_PRICING_PER_MILLION, OUTPUT_TOKEN_WEIGHT, computeWeightedTokens,
-  BASE_TOKENS_PER_CREDIT_DRAFT, tokensPerCredit, creditsForUsage,
-  PRICE_PER_CREDIT_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, CREDITS_PER_PURCHASE_UNIT, amountCentsForCredits,
-  minCreditsForMinPurchase, pricePerHundredCreditsUsd, STARTER_GRANT_CREDITS,
-  OUTPUT_TOKENS_PER_TYPE, estimateInputTokens, estimateCreditsRange,
+  BASE_RAW_TOKENS_PER_AI_TOKEN_DRAFT, rawTokensPerAiToken, aiTokensForUsage,
+  PRICE_PER_AI_TOKEN_HUNDREDTH_CENTS, MIN_PURCHASE_CENTS, AI_TOKENS_PER_PURCHASE_UNIT, amountCentsForAiTokens,
+  minAiTokensForMinPurchase, pricePerHundredAiTokensUsd, STARTER_GRANT_AI_TOKENS,
+  OUTPUT_TOKENS_PER_TYPE, estimateInputTokens, estimateBaseAiTokenRange,
 } from "./config/aiPricing.config";
-export type { CreditEstimateRange } from "./config/aiPricing.config";
+export type { AiTokenEstimateRange } from "./config/aiPricing.config";
 
 export { COUNTRIES } from "./constants/countries";
 
