@@ -58,7 +58,8 @@ async function ensureProfile(client, userId, email) {
 // avatar) may be stale until the next refresh. Callers should treat the two
 // distinctly — never report a metadataWarning as a failed save.
 async function updateProfile(client, userId, data) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c;
+    var _d, _e, _f;
     const fullName = [data.firstName.trim(), data.lastName.trim()].filter(Boolean).join(' ');
     const { error: profileError } = await client
         .from('profiles')
