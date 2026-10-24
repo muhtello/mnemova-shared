@@ -1,0 +1,9 @@
+export declare const DETECT_KEYWORDS_PATH = "generate-keywords";
+export declare const DETECT_KEYWORDS_OPTIONS_PATH = "generate-keywords/options";
+export declare const KEYWORD_PRICE_UNIT_CHARS = 10000;
+export declare const KEYWORD_CONTENT_MAX_LENGTH = 300000;
+export declare const KEYWORD_COUNT_DEFAULT = 20;
+export declare const KEYWORD_COUNT_MIN = 1;
+export declare const KEYWORD_COUNT_MAX = 200;
+export declare const DETECTED_KEYWORD_COUNT_MIN = 1;
+export declare const DETECTED_KEYWORD_COUNT_MAX = 3;

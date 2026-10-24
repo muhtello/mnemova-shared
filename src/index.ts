@@ -39,6 +39,11 @@ export type {
   AiModelTier, AiKeyword, SubDocument, AiTokenUsage, AiSessionCostEntry,
 } from "./types/aiGenerateType";
 
+export type {
+  Level, AiProvider, LevelOption, ProviderOption, FeatureOptions, BillingSummary,
+  AgentTokenUsage, WeightedKeyword,
+} from "./types/aiAgentType";
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 export {
   validateEmail, checkEmailConfirmed, resendConfirmationEmail,
@@ -78,6 +83,16 @@ export {
   estimateTokens, estimateCostUsd, formatUsd, makeId, trimSourceText, buildKeywordSegments, previewFor,
 } from "./helpers/aiGenerate.helper";
 export type { KeywordSegment } from "./helpers/aiGenerate.helper";
+
+// AI keyword detection (agent POST generate-keywords).
+export type { DetectKeywordsRequest, DetectedKeyword, DetectKeywordsResponse } from "./helpers/aiKeywords";
+export {
+  DETECT_KEYWORDS_PATH, DETECT_KEYWORDS_OPTIONS_PATH, KEYWORD_PRICE_UNIT_CHARS,
+  KEYWORD_CONTENT_MAX_LENGTH, KEYWORD_COUNT_DEFAULT, KEYWORD_COUNT_MIN, KEYWORD_COUNT_MAX,
+  DETECTED_KEYWORD_COUNT_MIN, DETECTED_KEYWORD_COUNT_MAX,
+  keywordBillingUnits, keywordPrice,
+  validateDetectedKeywords, toWeightedKeywords, toAiKeywords, mergeKeywords,
+} from "./helpers/aiKeywords";
 
 export {
   MODEL_PRICING_PER_MILLION, OUTPUT_TOKEN_WEIGHT, computeWeightedTokens,
